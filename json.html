@@ -1,0 +1,164 @@
+<script type="text/x-red" data-help-name="od-converter-nodered">
+  <p>Converts data to open.DASH JSON Format</p>
+
+  <h3>Inputs</h3>
+      <dl class="message-properties">
+          <dt>payload
+              <span class="property-type">Value | Array</span>
+          </dt>
+          <dd> The value / values that should be transmitted </dd>
+          <dt class="optional">date <span class="property-type">timestamp (ms)</span></dt>
+          <dd> Timestamp in milliseconds, which should be used (defaults to current Timestamp)</dd>
+          <dt class="optional">sensorid <span class="property-type">string</span></dt>
+          <dd> Sensor ID to be used (defaults to configured sensorid) </dd>
+          <dt class="optional">owner <span class="property-type">string</span></dt>
+          <dd> Key for the data source to be used (defaults to configured owner)</dd>
+      </dl>
+
+   <h3>Outputs</h3>
+       <ol class="node-ports">
+           <li>Standard output
+               <dl class="message-properties">
+                   <dt>payload <span class="property-type">string</span></dt>
+                   <dd>JSON containing the configured data in open.DASH JSON Format</dd>
+               </dl>
+           </li>
+       </ol>
+
+  <h3>Details</h3>
+      <p><code>msg.payload</code> is used as the payload and contains the values.</p>
+      <p>If provided <code>msg.owner</code>, <code>msg.date</code>, <code>msg.sensorid</code>, will be used in the resulting JSON Object.</p>
+
+  <h3>References</h3>
+      <ul>
+          <li><a href="https://docs.opendash.de">open.DASH docs</a></li>
+      </ul>
+</script>
+<script type="text/x-red" data-template-name="od-converter-nodered">
+  <div class="form-row">
+    <label for="node-input-name"><i class="fa fa-tag"></i> Node-Name</label>
+    <input type="text" id="node-input-name" placeholder="Name für Knoten">
+  </div>
+  <div class="form-row">
+    <label for="node-input-sensorid"><i class="fa fa-tag"></i> Eindeutiger Bezeichner (ID)</label>
+    <input type="text" id="node-input-sensorid" placeholder="Schlüsselwert unter dem Daten gespeichert werden">
+  </div>
+  <div class="form-row">
+    <label for="node-input-sensorname"><i class="fa fa-tag"></i> Sensorname</label>
+    <input type="text" id="node-input-sensorname" placeholder="Name für den Sensorwert, bspw. Temperatur">
+  </div>
+  <div class="form-row">
+    <label for="node-input-owner"><i class="fa fa-tag"></i> Nutzer / Datenquelle</label>
+    <input type="text" id="node-input-owner" placeholder="Datenquelle / Nutzername">
+  </div>
+  <div class="form-row">
+    <label for="node-input-dimCount"><i class="fa fa-tag"></i> Anzahl der Werte des Sensors</label>
+    <input type="number" id="node-input-dimCount" placeholder="Dimensionzahl des Sensors, bspw. 2 für GPS (Lat,Lon)">
+  </div>
+  <div id="valueTypes"><div>
+</script>
+<style></style>
+<script type="text/x-red" data-help-name="od-converter-nodered">
+  <p>Ein Knoten, um die  Ausgabe von Sensoren in das JSON-Datenformat des open.DASH Dashboardes zu konvertieren.</p>
+</script>
+
+<script type="text/javascript">
+  RED.nodes.registerType("od-converter-nodered", {
+    category: 'OpenDash GrovePi',
+    color: "#d8bfd8",
+    defaults: {
+      sensorid: {},
+      dimCount: { value: 1 },
+      name: {},
+      owner: {},
+      valueTypes: {},
+      sensorname: {}
+    },
+    inputs: 1,
+    outputs: 1,
+    icon: "envelope.png",
+    oneditsave: function() {
+      this.valueTypes = [];
+      let x = this;
+      x.dimCount = x.tempDimCount;
+      for (let i = 0; i < x.dimCount; i++) {
+        let valueType = {
+          name: $("#node-input-valuename" + (i + 1)).val(),
+          unit: $("#node-input-valueunit" + (i + 1)).val(),
+          type: $("#node-input-datatype" + (i + 1)).val()
+        };
+        this.valueTypes.push(valueType);
+      }
+      console.log("...", this.valueTypes);
+    },
+    oneditprepare: function() {
+      let x = this;
+      let inputTemplate =
+        "<strong>Wertdimension {{number}}</strong>" +
+        '<div class="form-row">' +
+        '<label for="node-input-valuename{{number}}"><i class="fa fa-tag"></i> Name für  {{number}}. Wert</label>' +
+        '<input type="text" id="node-input-valuename{{number}}" placeholder="Name für die {{number}}. Dimension des Sensor, bspw. X-Achse">' +
+        "</div>" +
+        '<div class="form-row">' +
+        '<label for="node-input-valueunit{{number}}"><i class="fa fa-tag"></i> Einheit für {{number}}. Wert</label>' +
+        '<input type="text" id="node-input-valueunit{{number}}" placeholder="Einheit des {{number}}. Wertes , bspw. X-Achse m/s²">' +
+        "</div>" +
+        '<div class="form-row">' +
+        '<label for="node-input-datatype{{number}}"><i class="icon-tag"></i> Datentyp</label>' +
+        '<select id="node-input-datatype{{number}}">' +
+        '<option value="String">Text</option>' +
+        '<option value="Boolean">Wahr/Falsch (Bool)</option>' +
+        '<option value="Number">Zahlenwert</option>' +
+        '<option value="Object">Beliebiges Objekt (JSON)</option>' +
+        '<option value="Geo">Geodatum (GeoJSON)</option>' +
+        "</select>" +
+        "</div>";
+
+      let preparedString = "";
+      for (let i = 0; i < x.dimCount; i++) {
+        preparedString += inputTemplate.replace(
+          new RegExp("{{number}}", "g"),
+          i + 1
+        );
+      }
+
+      $("#valueTypes").html(preparedString);
+      $("#node-input-dimCount").change(function() {
+        x.tempDimCount = Math.max(parseInt($("#node-input-dimCount").val()), 1);
+        let preparedString = "";
+        for (let i = 0; i < x.tempDimCount; i++) {
+          preparedString += inputTemplate.replace(
+            new RegExp("{{number}}", "g"),
+            i + 1
+          );
+        }
+        $("#valueTypes").html(preparedString);
+        for (let i = 0; i < x.dimCount; i++) {
+          if ("valueTypes" in x) {
+            if (x.valueTypes[i]) {
+              $("#node-input-valuename" + (i + 1)).val(x.valueTypes[i].name);
+              $("#node-input-valueunit" + (i + 1)).val(x.valueTypes[i].unit);
+              $("#node-input-datatype" + (i + 1)).val(x.valueTypes[i].type);
+            }
+          }
+        }
+      });
+
+      for (let i = 0; i < x.dimCount; i++) {
+        if (x.valueTypes[i]) {
+          $("#node-input-valuename" + (i + 1)).val(x.valueTypes[i].name);
+          $("#node-input-valueunit" + (i + 1)).val(x.valueTypes[i].unit);
+          $("#node-input-datatype" + (i + 1)).val(x.valueTypes[i].type);
+        }
+      }
+    },
+    label: function() {
+      return this.name || "open.DASH JSON-Converter";
+    },
+    paletteLabel: "open.DASH JSON",
+    labelStyle: function() {
+      return this.name ? "node_label_italic" : "";
+    },
+    settings: {}
+  });
+</script>

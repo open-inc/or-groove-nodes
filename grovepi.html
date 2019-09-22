@@ -1,0 +1,760 @@
+<!--
+  Copyright 2015 IBM Corp.
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+  Authors:
+     - Olaf Hahn
+-->
+
+<!-- LED (Analog / PWM) -->
+<script type="text/x-red" data-template-name="grovepi-pwm-led">
+    <div class="form-row" id="grovepi-pin-row">
+        <label for="node-input-pin"><i class="fa fa-plug"></i> PWM Digital Pin</label>
+        <select id="node-input-pin">
+            <option value="3">Digital 3</option>
+            <option value="5">Digital 5</option>
+            <option value="6">Digital 6</option>
+        </select>
+    </div>
+    <div class="form-row">
+        <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+</script>
+
+<script type="text/x-red" data-help-name="grovepi-pwm-led">
+  <h3>Inputs</h3>
+  <dl class="message-properties">
+    <dt>payload <span class="property-type">number</span></dt>
+    <dd> the brightness to set the LED to.</dd>
+  </dl>
+
+  <h3>Details</h3>
+  <p><code>msg.payload</code> can be a number ranging from <b>0</b>
+  for off to <b>255</b> for full brightness.</p>
+
+  <h3>References</h3>
+  <ul>
+    <li><a href="https://en.m.wikipedia.org/wiki/Pulse-width_modulation">Wikipedia - Pulse-Width Modulation</a></li>
+  </ul>
+</script>
+
+<script type="text/javascript">
+    RED.nodes.registerType('grovepi-pwm-led',{
+        category: 'OpenDash GrovePi',
+        color: '#1ABC9C',
+        defaults: {
+            name: {value: ""},
+            pin: {value: "3", required: true}
+        },
+        inputs: 1,
+        outputs: 0,
+        icon: "font-awesome/fa-lightbulb-o",
+        label: function() {
+            return this.name || "LED (PWM)";
+        }
+    });
+</script>
+
+<!-- LED (Digital, on / off) -->
+<script type="text/x-red" data-template-name="grovepi-led">
+    <div class="form-row" id="grovepi-pin-row">
+        <label for="node-input-pin"><i class="fa fa-plug"></i> PWM Digital Pin</label>
+        <select id="node-input-pin">
+            <option value="2">Digital 2</option>
+            <option value="3">Digital 3</option>
+            <option value="4">Digital 4</option>
+            <option value="5">Digital 5</option>
+            <option value="6">Digital 6</option>
+            <option value="7">Digital 7</option>
+            <option value="8">Digital 8</option>
+        </select>
+    </div>
+    <div class="form-row">
+        <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+</script>
+
+<script type="text/x-red" data-help-name="grovepi-led">
+  <h3>Inputs</h3>
+  <dl class="message-properties">
+    <dt>payload <span class="property-type">number | string | boolean</span></dt>
+    <dd>digital value to set the LED to.</dd>
+  </dl>
+
+  <h3>Details</h3>
+  <p><code>msg.payload</code> can be either
+  <ul>
+    <li><code>0, '0', false</code> for <b>off</b></li>
+    <li><code>1, '1', true</code> for <b>on</b></li>
+  </ul>
+  </p>
+</script>
+
+<script type="text/javascript">
+    RED.nodes.registerType('grovepi-led',{
+        category: 'OpenDash GrovePi',
+        color: '#1ABC9C',
+        defaults: {
+            name: {value: ""},
+            pin: {value: "3", required: true}
+        },
+        inputs: 1,
+        outputs: 0,
+        icon: "font-awesome/fa-lightbulb-o",
+        label: function() {
+            return this.name || "LED";
+        }
+    });
+</script>
+
+<!-- Ultrasonic Distance Sensor -->
+<script type="text/x-red" data-template-name="grovepi-ultrasonic">
+    <div class="form-row" id="grovepi-pin-row">
+        <label for="node-input-pin"><i class="fa fa-plug"></i> Digital Pin</label>
+        <select id="node-input-pin">
+            <option value="2">Digital 2</option>
+            <option value="3">Digital 3</option>
+            <option value="4">Digital 4</option>
+            <option value="5">Digital 5</option>
+            <option value="6">Digital 6</option>
+            <option value="7">Digital 7</option>
+            <option value="8">Digital 8</option>
+        </select>
+    </div>
+    <div class="form-row" id="grovepi-mode-row">
+        <label for="node-input-mode"><i class="fa fa-plug"></i> Mode</label>
+        <select id="node-input-mode">
+            <option value="timer">Timer Mode</option>
+            <option value="event">Event Mode</option>
+        </select>
+    </div>
+    <div class="form-row interval-row" id="grovepi-interval-row">
+        <label for="node-input-interval"<i class="fa fa-repeat"></i> Interval</label>
+        <input id="node-input-interval" min="1" class="interval-time-count"></input>
+        <select style="width: 150px" id="node-input-unit">
+            <option value="ms" data-i18n="inject.milliseconds">Milliseconds</option>
+            <option value="s" data-i18n="inject.seconds">Seconds</option>
+            <option value="m" data-i18n="inject.minutes">Minutes</option>
+            <option value="h" data-i18n="inject.hours">Hours</option>
+        </select><br/>
+    </div>
+    <div class="form-row">
+        <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+</script>
+
+<script type="text/x-red" data-help-name="grovepi-ultrasonic">
+  <p>Reads values from an ultrasonic range sensor.</p>
+
+  <h3>Outputs</h3>
+  <dl class="message-properties">
+    <dt>payload <span class="property-type">number</span></dt>
+    <dd> distance sensor reading, roughly the distance in cm. </dd>
+  </dl>
+
+  <h3>Details</h3>
+  <p>By default, the node sends a reading every 1 second, however this can be changed in the interval section of the nodes configuration.</p>
+</script>
+
+<script type="text/javascript">
+  RED.nodes.registerType('grovepi-ultrasonic', {
+    category: 'OpenDash GrovePi',
+    color: '#1ABC9C',
+    defaults: {
+      name: {value:""},
+      mode: {value: "timer", required: true},
+      interval: {value: 1, required: true},
+      unit: {value: "s", required: true},
+      pin: {value:"2", required: true}
+    },
+    inputs: 0,
+    outputs: 1,
+    icon: "font-awesome/fa-wifi",
+    label: function() {
+      return this.name || "Ultrasonic Ranger";
+    }
+  });
+</script>
+<!-- End of Grove Pi Digital Sensor Node -->
+
+<!-- Grove Pi LCD-RGB Output Node -->
+<script type="text/x-red" data-template-name="grovepi-rgblcd">
+    <div class="form-row" id="grovepi-pin-row">
+        <label for="node-input-pin"><i class="fa fa-plug"></i> I2C Pin</label>
+        <select id="node-input-pin">
+            <option value="1">I2C-1</option>
+            <option value="2">I2C-2</option>
+            <option value="3">I2C-3</option>
+        </select>
+    </div>
+    <div class="form-row">
+        <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+</script>
+
+<script type="text/x-red" data-help-name="grovepi-rgblcd">
+  <p>The text is passed in as as string <code>msg.payload.text</code> and can be 32 characters long.
+  The first 16 get displayed on the first row of the LCD, the remaining 16 get displayed on the secnod row.
+  The backlight color can be set using <code>msg.payload.color</code></p>.
+  <p><code>msg.payload.color</code> can be either a color name like "red", "green", "yellow"
+  or an array of three values <code>[r, g, b]</code> ranging from 0 to 255.</p>.
+
+  <p>This node can be used to display text on a LCD display.</p>
+
+  <h3>Inputs</h3>
+  <dl class="message-properties">
+    <dt>payload.text <span class="property-type">string</span></dt>
+    <dd>Text to show on the LCD, limited to 32 characters. 16 are shown on the first line, 16 on the second line</dd>
+    <dt>payload.color <span class="property-type">string | [number, number, number]</span></dt>
+    <dd>Color for the RGB backlight of the display.</dd>
+  </dl>
+
+  <h3>Details</h3>
+  <p><code>msg.payload.color</code> can be either a color name like <code>"red", "green", "yellow"</code>
+  or an array of three values <code>[red, green, blue]</code>, each ranging from 0 to 255.</p>
+
+  <h3>References</h3>
+  <ul>
+    <li><a href="https://www.w3schools.com/cssref/css_colors.asp">List of the supported color names</a></li>
+  </ul>
+</script>
+
+<script type="text/javascript">
+    RED.nodes.registerType('grovepi-rgblcd',{
+        category: 'OpenDash GrovePi',
+        color: '#1ABC9C',
+        defaults: {
+            name: {value: ""},
+            pin: {value: "1", required: true}
+        },
+        inputs:1,
+        outputs:0,
+      icon: "font-awesome/fa-desktop",
+        label: function() {
+            return this.name||"LCD RGB-Backlight";
+        }
+    });
+</script>
+
+<!-- Grove Pi Datapoint LCD-RGB Output Node -->
+<script type="text/x-red" data-template-name="grovepi-datapoint-lcd">
+    <div class="form-row" id="grovepi-pin-row">
+        <label for="node-input-pin"><i class="fa fa-plug"></i> I2C Pin</label>
+        <select id="node-input-pin">
+            <option value="1">I2C-1</option>
+            <option value="2">I2C-2</option>
+            <option value="3">I2C-3</option>
+        </select>
+    </div>
+    <div class="form-row">
+        <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+</script>
+
+<script type="text/x-red" data-help-name="grovepi-datapoint-lcd">
+  <p>This node can be used to display datapoints on a LCD display.
+  When connected to an OpenDash sensor node, the value of the
+  datapoint will be displayed in the first line, the name and unit of
+  the value are displayed on the second line.</p>
+
+  <h3>Inputs</h3>
+  <dl class="message-properties">
+    <dt>payload <span class="property-type">string | number | boolean | array</span></dt>
+    <dd>Value or list of values to show on the LCD</dd>
+    <dt>valueTypes <span class="property-type">array</span></dt>
+    <dd>List of type information for each value in the payload</dd>
+  </dl>
+
+  <h3>Details</h3>
+  <p>Only the first value of the payload is shown.</p>
+</script>
+
+<script type="text/javascript">
+    RED.nodes.registerType('grovepi-datapoint-lcd',{
+        category: 'OpenDash GrovePi',
+        color: '#1ABC9C',
+        defaults: {
+            name: {value: ""},
+            pin: {value: "1", required: true}
+        },
+        inputs:1,
+        outputs:0,
+      icon: "font-awesome/fa-desktop",
+        label: function() {
+            return this.name||"Datapoint LCD";
+        }
+    });
+</script>
+
+<!-- Relay (Digital, on / off) -->
+<script type="text/x-red" data-template-name="grovepi-relay">
+    <div class="form-row" id="grovepi-pin-row">
+        <label for="node-input-pin"><i class="fa fa-plug"></i> Digital Pin</label>
+        <select id="node-input-pin">
+            <option value="2">Digital 2</option>
+            <option value="3">Digital 3</option>
+            <option value="4">Digital 4</option>
+            <option value="5">Digital 5</option>
+            <option value="6">Digital 6</option>
+            <option value="7">Digital 7</option>
+            <option value="8">Digital 8</option>
+        </select>
+    </div>
+    <div class="form-row">
+        <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+</script>
+
+<script type="text/x-red" data-help-name="grovepi-relay">
+  <p>This node can be used to control a relay as a digital output.</p>
+  <p>The input value (<code>msg.payload</code>) can be either <b>0</b> or <b>'0'</b> (off)
+  or <b>1</b> or <b>'1'</b> (on).</p>
+
+  <p>This node can be used to control a relay as a digital output.</p>
+
+  <h3>Inputs</h3>
+  <dl class="message-properties">
+    <dt>payload <span class="property-type">number | string | boolean</span></dt>
+    <dd>digital value to control the relay with (off / on).</dd>
+  </dl>
+
+  <h3>Details</h3>
+  <p><code>msg.payload</code> can be either
+  <ul>
+    <li><code>0, '0', false</code> for <b>off</b></li>
+    <li><code>1, '1', true</code> for <b>on</b></li>
+  </ul>
+  </p>
+</script>
+
+<script type="text/javascript">
+    RED.nodes.registerType('grovepi-relay',{
+        category: 'OpenDash GrovePi',
+        color: '#1ABC9C',
+        defaults: {
+            name: {value: ""},
+            pin: {value: "3", required: true}
+        },
+        inputs: 1,
+        outputs: 0,
+      icon: "font-awesome/fa-plug",
+        label: function() {
+            return this.name || "Relay";
+        }
+    });
+</script>
+
+<!-- Buzzer (Digital, on / off) -->
+<script type="text/x-red" data-template-name="grovepi-buzzer">
+    <div class="form-row" id="grovepi-pin-row">
+        <label for="node-input-pin"><i class="fa fa-plug"></i> Digital Pin</label>
+        <select id="node-input-pin">
+            <option value="2">Digital 2</option>
+            <option value="3">Digital 3</option>
+            <option value="4">Digital 4</option>
+            <option value="5">Digital 5</option>
+            <option value="6">Digital 6</option>
+            <option value="7">Digital 7</option>
+            <option value="8">Digital 8</option>
+        </select>
+    </div>
+    <div class="form-row">
+        <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+</script>
+
+<script type="text/x-red" data-help-name="grovepi-buzzer">
+  <p>This node can be used to control a buzzer as a digital output.</p>
+
+  <h3>Inputs</h3>
+  <dl class="message-properties">
+    <dt>payload <span class="property-type">number | string | boolean</span></dt>
+    <dd>digital value to control the buzzer with (silent / buzzing).</dd>
+  </dl>
+
+  <h3>Details</h3>
+  <p><code>msg.payload</code> can be either
+  <ul>
+    <li><code>0, '0', false</code> for <b>off</b></li>
+    <li><code>1, '1', true</code> for <b>on</b></li>
+  </ul>
+  </p>
+</script>
+
+<script type="text/javascript">
+    RED.nodes.registerType('grovepi-buzzer',{
+        category: 'OpenDash GrovePi',
+        color: '#1ABC9C',
+        defaults: {
+            name: {value: ""},
+            pin: {value: "3", required: true}
+        },
+        inputs: 1,
+        outputs: 0,
+        icon: "font-awesome/fa-volume-up",
+        label: function() {
+            return this.name || "Buzzer";
+        }
+    });
+</script>
+
+<script type="text/x-red" data-template-name="grovepi-dht11">
+    <div class="form-row" id="grovepi-pin-row">
+        <label for="node-input-pin"><i class="fa fa-plug"></i> Digital Pin</label>
+        <select id="node-input-pin">
+            <option value="2">Digital 2</option>
+            <option value="3">Digital 3</option>
+            <option value="4">Digital 4</option>
+            <option value="5">Digital 5</option>
+            <option value="6">Digital 6</option>
+            <option value="7">Digital 7</option>
+            <option value="8">Digital 8</option>
+        </select>
+    </div>
+    <div class="form-row interval-row" id="grovepi-interval-row">
+        <label for="node-input-interval"<i class="fa fa-repeat"></i> Interval</label>
+        <input id="node-input-interval" min="1" class="interval-time-count"></input>
+        <select style="width: 150px" id="node-input-unit">
+            <option value="ms" data-i18n="inject.milliseconds">Milliseconds</option>
+            <option value="s" data-i18n="inject.seconds">Seconds</option>
+            <option value="m" data-i18n="inject.minutes">Minutes</option>
+            <option value="h" data-i18n="inject.hours">Hours</option>
+        </select><br/>
+    </div>
+    <div class="form-row">
+        <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+</script>
+
+<script type="text/x-red" data-help-name="grovepi-dht11">
+  <p>Reads values from a DHT11 temperature and humidity sensor.</p>
+
+  <h3>Outputs</h3>
+  <dl class="message-properties">
+    <dt>payload <span class="property-type">[number, number, number]</span></dt>
+    <dd> temperature and humidity readings of the sensor. Array of three values.
+    <ol>
+      <li>Temperature</li>
+      <li>Humidity</li>
+      <li>Temperature Index</li>
+    </ol>
+  </dd>
+  </dl>
+
+  <h3>Details</h3>
+  <p>By default, the node sends a reading every 1 second, however this can be changed in the interval section of the nodes configuration.</p>
+  <p>The sensor is slow, so if some of the readings seem off, increasing the interval migth solve the problem.</p>
+</script>
+
+<script type="text/javascript">
+  RED.nodes.registerType('grovepi-dht11', {
+    category: 'OpenDash GrovePi',
+    color: '#1ABC9C',
+    defaults: {
+      name: {value:""},
+      interval: {value: 1, required: true},
+      unit: {value: "s", required: true},
+      pin: {value:"2", required: true}
+    },
+    inputs: 0,
+    outputs: 1,
+    icon: "font-awesome/fa-thermometer",
+    label: function() {
+      return this.name || "Temperature & Humidity Sensor";
+    }
+  });
+</script>
+
+<script type="text/x-red" data-template-name="grovepi-dht22">
+    <div class="form-row" id="grovepi-pin-row">
+        <label for="node-input-pin"><i class="fa fa-plug"></i> Digital Pin</label>
+        <select id="node-input-pin">
+            <option value="2">Digital 2</option>
+            <option value="3">Digital 3</option>
+            <option value="4">Digital 4</option>
+            <option value="5">Digital 5</option>
+            <option value="6">Digital 6</option>
+            <option value="7">Digital 7</option>
+            <option value="8">Digital 8</option>
+        </select>
+    </div>
+    <div class="form-row interval-row" id="grovepi-interval-row">
+        <label for="node-input-interval"<i class="fa fa-repeat"></i> Interval</label>
+        <input id="node-input-interval" min="1" class="interval-time-count"></input>
+        <select style="width: 150px" id="node-input-unit">
+            <option value="ms" data-i18n="inject.milliseconds">Milliseconds</option>
+            <option value="s" data-i18n="inject.seconds">Seconds</option>
+            <option value="m" data-i18n="inject.minutes">Minutes</option>
+            <option value="h" data-i18n="inject.hours">Hours</option>
+        </select><br/>
+    </div>
+    <div class="form-row">
+        <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+</script>
+
+<script type="text/x-red" data-help-name="grovepi-dht22">
+  <p>Reads values from a DHT22 temperature and humidity sensor.</p>
+
+  <h3>Outputs</h3>
+  <dl class="message-properties">
+    <dt>payload <span class="property-type">[number, number, number]</span></dt>
+    <dd> temperature and humidity readings of the sensor. Array of three values.
+    <ol>
+      <li>Temperature</li>
+      <li>Humidity</li>
+      <li>Temperature Index</li>
+    </ol>
+  </dd>
+  </dl>
+
+  <h3>Details</h3>
+  <p>By default, the node sends a reading every 1 second, however this can be changed in the interval section of the nodes configuration.</p>
+  <p>The sensor is slow, so if some of the readings seem off, increasing the interval migth solve the problem.</p>
+</script>
+
+<script type="text/javascript">
+  RED.nodes.registerType('grovepi-dht22', {
+    category: 'OpenDash GrovePi',
+    color: '#1ABC9C',
+    defaults: {
+      name: {value:""},
+      interval: {value: 1, required: true},
+      unit: {value: "s", required: true},
+      pin: {value:"2", required: true}
+    },
+    inputs: 0,
+    outputs: 1,
+    icon: "font-awesome/fa-thermometer",
+    label: function() {
+      return this.name || "Temperature & Humidity Sensor";
+    }
+  });
+</script>
+
+<script type="text/x-red" data-template-name="grovepi-button">
+    <div class="form-row" id="grovepi-pin-row">
+        <label for="node-input-pin"><i class="fa fa-plug"></i> Digital Pin</label>
+        <select id="node-input-pin">
+            <option value="2">Digital 2</option>
+            <option value="3">Digital 3</option>
+            <option value="4">Digital 4</option>
+            <option value="5">Digital 5</option>
+            <option value="6">Digital 6</option>
+            <option value="7">Digital 7</option>
+            <option value="8">Digital 8</option>
+        </select>
+    </div>
+    <div class="form-row" id="grovepi-mode-row">
+        <label for="node-input-mode"><i class="fa fa-plug"></i> Mode</label>
+        <select id="node-input-mode">
+            <option value="timer">Timer Mode</option>
+            <option value="event">Event Mode</option>
+        </select>
+    </div>
+    <div class="form-row interval-row" id="grovepi-interval-row">
+        <label for="node-input-interval"<i class="fa fa-repeat"></i> Interval</label>
+        <input id="node-input-interval" min="1" class="interval-time-count"></input>
+        <select style="width: 150px" id="node-input-unit">
+            <option value="ms" data-i18n="inject.milliseconds">Milliseconds</option>
+            <option value="s" data-i18n="inject.seconds">Seconds</option>
+            <option value="m" data-i18n="inject.minutes">Minutes</option>
+            <option value="h" data-i18n="inject.hours">Hours</option>
+        </select><br/>
+    </div>
+    <div class="form-row">
+        <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+</script>
+
+<script type="text/x-red" data-help-name="grovepi-button">
+  <p>Reads values from a button sensor.</p>
+
+  <h3>Outputs</h3>
+  <dl class="message-properties">
+    <dt>payload <span class="property-type">number</span></dt>
+    <dd> either <code>0</code> or <code>1</code> if button is pressed.</dd>
+  </dl>
+
+  <h3>Details</h3>
+  <p>By default, the node sends a reading every 1 second, however this can be changed in the interval section of the nodes configuration.</p>
+</script>
+
+<script type="text/javascript">
+  RED.nodes.registerType('grovepi-button', {
+    category: 'OpenDash GrovePi',
+    color: '#1ABC9C',
+    defaults: {
+      name: {value: ""},
+      mode: {value: "timer", required: true},
+      interval: {value: 1, required: true},
+      unit: {value: "s", required: true},
+      pin: {value: "2", required: true}
+    },
+    inputs: 0,
+    outputs: 1,
+    icon: "font-awesome/fa-toggle-on",
+    label: function() {
+      return this.name || "Button";
+    }
+  });
+</script>
+
+<script type="text/x-red" data-template-name="grovepi-heart-rate">
+    <div class="form-row" id="grovepi-pin-row">
+        <label for="node-input-pin"><i class="fa fa-plug"></i> Digital Pin</label>
+        <select id="node-input-pin">
+            <option value="2">Digital 2</option>
+            <option value="3">Digital 3</option>
+            <option value="4">Digital 4</option>
+            <option value="5">Digital 5</option>
+            <option value="6">Digital 6</option>
+            <option value="7">Digital 7</option>
+            <option value="8">Digital 8</option>
+        </select>
+    </div>
+    <div class="form-row" id="grovepi-mode-row">
+        <label for="node-input-mode"><i class="fa fa-plug"></i> Mode</label>
+        <select id="node-input-mode">
+            <option value="timer">Timer Mode</option>
+            <option value="event">Event Mode</option>
+        </select>
+    </div>
+    <div class="form-row interval-row" id="grovepi-interval-row">
+        <label for="node-input-interval"<i class="fa fa-repeat"></i> Interval</label>
+        <input id="node-input-interval" min="1" class="interval-time-count"></input>
+        <select style="width: 150px" id="node-input-unit">
+            <option value="ms" data-i18n="inject.milliseconds">Milliseconds</option>
+            <option value="s" data-i18n="inject.seconds">Seconds</option>
+            <option value="m" data-i18n="inject.minutes">Minutes</option>
+            <option value="h" data-i18n="inject.hours">Hours</option>
+        </select><br/>
+    </div>
+    <div class="form-row">
+        <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+</script>
+
+<script type="text/x-red" data-help-name="grovepi-heart-rate">
+  <p>Reads values from an ear-clip heart rate monitor.</p>
+  <p>The value read is <b>not</b> the heart rate. Using a fast enough
+  sampling rate, the heart rate can be calculated by counting the
+  transitions from 1 to 0 or from 0 to 1.</p>
+  <p>Usually, the heart rate ranges from 60 to 180 beats per minute,
+  so sampling every 0.1 second should give good results.</p>
+
+  <h3>Outputs</h3>
+  <dl class="message-properties">
+    <dt>payload <span class="property-type">number</span></dt>
+    <dd> either <code>0</code> or <code>1</code>.</dd>
+  </dl>
+
+  <h3>Details</h3>
+  <p>By default, the node sends a reading every 1 second, however this can be changed in the interval section of the nodes configuration.</p>
+</script>
+
+<script type="text/javascript">
+  RED.nodes.registerType('grovepi-heart-rate', {
+    category: 'OpenDash GrovePi',
+    color: '#1ABC9C',
+    defaults: {
+      name: {value: ""},
+      mode: {value: "timer", required: true},
+      interval: {value: 1, required: true},
+      unit: {value: "s", required: true},
+      pin: {value: "2", required: true}
+    },
+    inputs: 0,
+    outputs: 1,
+    icon: "font-awesome/fa-heartbeat",
+    label: function() {
+      return this.name || "Heart Rate Sensor";
+    }
+  });
+</script>
+
+<script type="text/x-red" data-template-name="grovepi-rotary">
+    <div class="form-row" id="grovepi-pin-row">
+        <label for="node-input-pin"><i class="fa fa-plug"></i> Digital Pin</label>
+        <select id="node-input-pin">
+            <option value="0">Analog 0</option>
+            <option value="1">Analog 1</option>
+            <option value="2">Analog 2</option>
+        </select>
+    </div>
+    <div class="form-row" id="grovepi-mode-row">
+        <label for="node-input-mode"><i class="fa fa-plug"></i> Mode</label>
+        <select id="node-input-mode">
+            <option value="timer">Timer Mode</option>
+            <option value="event">Event Mode</option>
+        </select>
+    </div>
+    <div class="form-row interval-row" id="grovepi-interval-row">
+        <label for="node-input-interval"<i class="fa fa-repeat"></i> Interval</label>
+        <input id="node-input-interval" min="1" class="interval-time-count"></input>
+        <select style="width: 150px" id="node-input-unit">
+            <option value="ms" data-i18n="inject.milliseconds">Milliseconds</option>
+            <option value="s" data-i18n="inject.seconds">Seconds</option>
+            <option value="m" data-i18n="inject.minutes">Minutes</option>
+            <option value="h" data-i18n="inject.hours">Hours</option>
+        </select><br/>
+    </div>
+    <div class="form-row">
+        <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+</script>
+
+<script type="text/x-red" data-help-name="grovepi-rotary">
+  <p>Reads values from a potentiometer / rotary sensor.</p>
+
+  <h3>Outputs</h3>
+  <dl class="message-properties">
+    <dt>payload <span class="property-type">number</span></dt>
+    <dd> ranges from <code>0</code> or <code>1023</code>.</dd>
+  </dl>
+
+  <h3>Details</h3>
+  <p>By default, the node sends a reading every 1 second, however this can be changed in the interval section of the nodes configuration.</p>
+</script>
+
+<script type="text/javascript">
+  RED.nodes.registerType('grovepi-rotary', {
+    category: 'OpenDash GrovePi',
+    color: '#1ABC9C',
+    defaults: {
+      name: {value: ""},
+      mode: {value: "timer", required: true},
+      interval: {value: 1, required: true},
+      unit: {value: "s", required: true},
+      pin: {value: "2", required: true}
+    },
+    inputs: 0,
+    outputs: 1,
+    icon: "font-awesome/fa-repeat",
+    label: function() {
+      return this.name || "Rotary Angle Sensor";
+    }
+  });
+</script>

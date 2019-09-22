@@ -1,0 +1,51 @@
+* Port Types
+[[https://www.dexterindustries.com/GrovePi/engineering/port-description/]]
+
+** Analog/PWM LED Control
+Pins: D3, D5, D6
+* NodeRed OpenDASH GrovePI Nodes
+
+There are two existing collections of GrovePI sensor nodes for NodeRed:
+- [[https://github.com/memetolsen/node-red-grovepi-nodes]]
+- [[https://github.com/O-Hahn/node-red-contrib-grovepi]]
+
+- [[https://github.com/DexterInd/GrovePi/tree/master/Software/NodeJS]]
+
+What makes this package different from the ones listed above is that
+each sensor includes some metadata about the values it sends in the
+message. This way, sensors can be connected to meaningful OpenDASH
+data streams without configuring the value types by hand.
+
+In addition to that, sensors can be used in two different
+configurations, in *live* or in *interval* mode.
+
+TODO: not implemented
+
+In *live* mode, the sensors are polled as often as possible but only
+send events when the new value is different.  It's well suited for
+building applications with alarms or actions triggered by the sensors
+values.
+TODO: Configurable poll time
+
+In *interval* mode, sensors send an event every n seconds
+(configurable).  It's intended to be used to provide a consistent data
+stream for logging applications.
+
+To prevent wrongly configured sensors from hanging up the system,
+the fastest sampling rate allowed is once every 50ms.
+
+Arguments against using O-Hahn's module:
+- Only "digital input", "analog input", "digital output"
+- no pwm LED output
+- users need to know if their sensor is digital or analog
+- requires a config node
+
+Arguments against using memetolsen's module:
+- no repeated posting
+* Message Properties
+See [[https://nodered.org/docs/user-guide/messages]]
+
+Usually, the "value" of a message is stored in its ~payload~ field.
+To make integration with other nodes easy, the payload of a sensor
+message only contains its values, all additional information is stored
+in other properties.

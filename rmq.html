@@ -1,0 +1,159 @@
+<script type="text/javascript">
+  RED.nodes.registerType('rmq-output',{
+    category: 'OpenDash GrovePi',
+    color: '#a6bbcf',
+    defaults: {
+      name: {value: ""},
+      hostname: {value: "localhost"},
+      username: {value: "", required: true},
+      password: {value: "", required: true},
+      exchange: {value: "owcore.data"},
+      durable: {value: false},
+    },
+    inputs: 1,
+    outputs: 0,
+    icon: "file.png",
+    label: function() {
+      return this.name || "RMQ Output";
+    }
+  });
+</script>
+
+<script type="text/x-red" data-template-name="rmq-output">
+  <div class="form-row">
+  <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+  <input type="text" id="node-input-name" placeholder="Name">
+  </div>
+  <div class="form-row">
+  <label for="node-input-id"><i class="icon-tag"></i> Id</label>
+  <input type="text" id="node-input-id" placeholder="nodered.1.1">
+  </div>
+  <div class="form-row">
+  <label for="node-input-hostname"><i class="icon-tag"></i> Hostname</label>
+  <input type="text" id="node-input-hostname" placeholder="example.com">
+  </div>
+  <div class="form-row">
+  <label for="node-input-username"><i class="icon-tag"></i> Username</label>
+  <input type="text" id="node-input-username" placeholder="">
+  </div>
+  <div class="form-row">
+  <label for="node-input-password"><i class="icon-tag"></i> Password</label>
+  <input type="password" id="node-input-password" placeholder="">
+  </div>
+  <div class="form-row">
+  <label for="node-input-exchange"><i class="icon-tag"></i> Exchange</label>
+  <input type="text" id="node-input-exchange" placeholder="">
+  </div>
+  <div class="form-row">
+  <label for="node-input-durable"><i class="icon-tag"></i> Durable</label>
+  <input type="checkbox" id="node-input-durable">
+  </div>
+</script>
+
+<script type="text/x-red" data-help-name="rmq-output">
+  <p>Connects to a OpenDash MQTT broker and sends messages.</p>
+
+  <h3>Inputs</h3>
+  <ol class="node-ports">
+    <li>Value
+      <dl class="message-properties">
+        <dt>payload <span class="property-type">number | string | boolean | object | array</span></dt>
+        <dd>value / values of the datapoint.</dd>
+      </dl>
+    </li>
+    <li>Value Types
+      <dl class="message-properties">
+        <dt>valueTypes <span class="property-type">object</span></dt>
+        <dd>type information for each value.</dd>
+      </dl>
+    </li>
+    <li>Date
+      <dl class="message-properties">
+        <dt>date <span class="property-type">number</span></dt>
+        <dd><b>optional</b> timestamp for the datapoint, if no value is provided, the current time is used.</dd>
+      </dl>
+    </li>
+  </ol>
+
+  <h3>Details</h3>
+  <p>If the datapoint contains multiple value entries for different
+  times, the node sends out <b>multiple</b> messages.</p>
+</script>
+
+<script type="text/javascript">
+  RED.nodes.registerType('rmq-input',{
+    category: 'OpenDash GrovePi',
+    color: '#a6bbcf',
+    defaults: {
+      name: {value: ""},
+      hostname: {value: "localhost"},
+      username: {value: "", required: true},
+      password: {value: "", required: true},
+      exchange: {value: "owcore.data"},
+      durable: {value: false},
+    },
+    inputs: 0,
+    outputs: 1,
+    icon: "file.png",
+    label: function() {
+      return this.name || "RMQ Input";
+    }
+  });
+</script>
+
+<script type="text/x-red" data-template-name="rmq-input">
+  <div class="form-row">
+  <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+  <input type="text" id="node-input-name" placeholder="Name">
+  </div>
+  <div class="form-row">
+  <label for="node-input-hostname"><i class="icon-tag"></i> Hostname</label>
+  <input type="text" id="node-input-hostname" placeholder="example.com">
+  </div>
+  <div class="form-row">
+  <label for="node-input-username"><i class="icon-tag"></i> Username</label>
+  <input type="text" id="node-input-username" placeholder="">
+  </div>
+  <div class="form-row">
+  <label for="node-input-password"><i class="icon-tag"></i> Password</label>
+  <input type="password" id="node-input-password" placeholder="">
+  </div>
+  <div class="form-row">
+  <label for="node-input-exchange"><i class="icon-tag"></i> Exchange</label>
+  <input type="text" id="node-input-exchange" placeholder="">
+  </div>
+  <div class="form-row">
+  <label for="node-input-durable"><i class="icon-tag"></i> Durable</label>
+  <input type="checkbox" id="node-input-durable">
+  </div>
+</script>
+
+<script type="text/x-red" data-help-name="rmq-input">
+  <p>Connects to a OpenDash MQTT broker and publishes messages.</p>
+
+  <h3>Outputs</h3>
+  <ol class="node-ports">
+    <li>Value
+      <dl class="message-properties">
+        <dt>value <span class="property-type">number | string | boolean | object | array</span></dt>
+        <dd>value / values of the datapoint.</dd>
+      </dl>
+    </li>
+    <li>Value Types
+      <dl class="message-properties">
+        <dt>valueTypes <span class="property-type">object</span></dt>
+        <dd>type information for each value.</dd>
+      </dl>
+    </li>
+    <li>Date
+      <dl class="message-properties">
+        <dt>date <span class="property-type">number</span></dt>
+        <dd>time the value arrived at.</dd>
+      </dl>
+    </li>
+  </ol>
+
+  <h3>Details</h3>
+  <p>If the datapoint contains multiple value entries for different
+  times, the node sends out <b>multiple</b> messages.</p>
+</script>

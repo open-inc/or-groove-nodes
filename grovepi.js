@@ -33,6 +33,7 @@ var UltrasonicSensor = GrovePi.sensors.UltrasonicDigital;
 var DHTSensor = GrovePi.sensors.DHTDigital;
 
 var GrovePiWrapper = require('./lib/GrovePiWrapper');
+var GestureSensor = require('./lib/GestureSensor');
 
 // Mark a node as connected
 function setStatusConnected(node) {

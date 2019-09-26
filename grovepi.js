@@ -209,12 +209,12 @@ module.exports = function(RED) {
     setStatusConnected(node);
 
     this.on('input', function(msg) {
-      wrapper.analogOutput(this.pin, msg.payload);
+      wrapper.analogOutput(node.pin, msg.payload);
       setStatusValue(node, msg.payload);
     });
 
     this.on('close', function(done) {
-      this.sensor(done);
+      node.sensor(done);
       setStatusDone(node);
     });
   }
@@ -229,12 +229,12 @@ module.exports = function(RED) {
     setStatusConnected(node);
 
     this.on('input', function(msg) {
-      wrapper.digitalOutput(this.pin, msg.payload);
+      wrapper.digitalOutput(node.pin, msg.payload);
       setStatusValue(node, msg.payload);
     });
 
     this.on('close', function(done) {
-      this.sensor(done);
+      node.sensor(done);
       setStatusDone(node);
     });
   }
@@ -250,7 +250,7 @@ module.exports = function(RED) {
     setStatusConnected(node);
 
     this.on('input', function(msg) {
-      wrapper.LCDOutput(this.pin, msg.payload.text, msg.payload.color);
+      wrapper.LCDOutput(node.pin, msg.payload.text, msg.payload.color);
     });
 
     this.on('close', function(done) {
@@ -274,22 +274,22 @@ module.exports = function(RED) {
       var text = '';
       for (var i = 0; i < limit; i++) {
         var value = values[i];
-        var line = '';
+        var valueType = msg.valueTypes[i] || { name: 'unknown', unit: ''}
+        var line = `${valueType.name}: `;
 
         // If the number is a floating point value, truncate it to two decimal places
-        if (value % 1.0 == 0.0) {
-          line += value;
+        if (typeof value === 'number') {
+            if (value % 1.0 == 0.0) {
+              line += value;
+            } else {
+              line += value.toFixed(2);
+            }
         } else {
-          line += value.toFixed(2);
+          line += value;
         }
 
-        if (msg.valueTypes && msg.valueTypes.length == values.length) {
-          var valueType = msg.valueTypes[i];
-          if (valueType.unit) {
-            line += `${valueType.unit} ${valueType.name}`;
-          } else {
-            line += ` ${valueType.name}`;
-          }
+        if (valueType.unit) {
+          line += valueType.unit;
         }
 
         // Limit lines to 16 characters
@@ -316,7 +316,7 @@ module.exports = function(RED) {
     RED.nodes.createNode(this, config);
     this.pin = config.pin;
     this.repeat = parseSamplingRate(config);
-    this.sensor = new Digital(this.pin);
+    this.sensor = new DigitalSensor(this.pin);
     this.mode = config.mode;
     this.lastValue = undefined;
     this.valueTypes = [
@@ -334,7 +334,7 @@ module.exports = function(RED) {
     RED.nodes.createNode(this, config);
     this.pin = config.pin;
     this.repeat = parseSamplingRate(config);
-    this.sensor = new Digital(this.pin);
+    this.sensor = new DigitalSensor(this.pin);
     this.mode = config.mode;
     this.lastValue = undefined;
     this.valueTypes = [
@@ -352,7 +352,7 @@ module.exports = function(RED) {
     RED.nodes.createNode(this, config);
     this.pin = config.pin;
     this.repeat = parseSamplingRate(config);
-    this.sensor = new Analog(this.pin);
+    this.sensor = new AnalogSensor(this.pin);
     this.lastValue = undefined;
     this.valueTypes = [
       {
@@ -364,4 +364,50 @@ module.exports = function(RED) {
     setupSensorNode(this);
   }
   RED.nodes.registerType("grovepi-rotary", Rotary);
+
+  function AirQuality(config) {
+    RED.nodes.createNode(this, config);
+    this.pin = config.pin;
+    this.repeat = parseSamplingRate(config);
+    this.sensor = new AnalogSensor(this.pin);
+    this.lastValue = undefined;
+    this.valueTypes = [
+      {
+        name: "Raw",
+        type: "Number",
+      },
+      {
+        name: "Pollution",
+        type: "String",
+      }
+    ];
+
+    var node = this;
+    node.interval = setInterval(function() {
+      var value = node.sensor.read();
+      var rating = "none";
+      if (value > 600) {
+        rating = "high";
+      } else if (value > 300) {
+        rating = "medium";
+      } else if (value > 100) {
+        rating = "low";
+      }
+
+      var msg = {
+        payload: [value, rating],
+        valueTypes: node.valueTypes,
+      };
+
+      setStatusValue(node, value);
+      node.send(msg);
+    }, node.repeat);
+
+    node.on('close', function(done) {
+      clearInterval(node.interval);
+      setStatusDone(node);
+      done();
+    });
+  }
+  RED.nodes.registerType("grovepi-air-quality", AirQuality);
 }

@@ -767,3 +767,82 @@
     }
   });
 </script>
+
+<script type="text/x-red" data-template-name="grovepi-air-quality">
+    <div class="form-row" id="grovepi-pin-row">
+        <label for="node-input-pin"><i class="fa fa-plug"></i> Digital Pin</label>
+        <select id="node-input-pin">
+            <option value="0">Analog 0</option>
+            <option value="1">Analog 1</option>
+            <option value="2">Analog 2</option>
+        </select>
+    </div>
+    <div class="form-row" id="grovepi-mode-row">
+        <label for="node-input-mode"><i class="fa fa-plug"></i> Mode</label>
+        <select id="node-input-mode">
+            <option value="timer">Timer Mode</option>
+            <option value="event">Event Mode</option>
+        </select>
+    </div>
+    <div class="form-row interval-row" id="grovepi-interval-row">
+        <label for="node-input-interval"<i class="fa fa-repeat"></i> Interval</label>
+        <input id="node-input-interval" min="1" class="interval-time-count"></input>
+        <select style="width: 150px" id="node-input-unit">
+            <option value="ms" data-i18n="inject.milliseconds">Milliseconds</option>
+            <option value="s" data-i18n="inject.seconds">Seconds</option>
+            <option value="m" data-i18n="inject.minutes">Minutes</option>
+            <option value="h" data-i18n="inject.hours">Hours</option>
+        </select><br/>
+    </div>
+    <div class="form-row">
+        <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+</script>
+
+<script type="text/x-red" data-help-name="grovepi-air-quality">
+  <p>Reads values from an air-quality sensor.</p>
+
+  <h3>Outputs</h3>
+  <dl class="message-properties">
+    <dt>payload <span class="property-type">[number, string]</span></dt>
+    <dd> Air quality readings of the sensor
+    <ol>
+      <li>Raw Value, 0..1023</li>
+      <li>Pollution Rating</li>
+    </ol>
+  </dd>
+  </dl>
+
+  <h3>Details</h3>
+  <p>By default, the node sends a reading every 1 second, however this can be changed in the interval section of the nodes configuration.</p>
+  <p>
+    <b>Pollution Ratings</b>
+    <ul>
+      <li><code>"none"</code>, raw value 0..100</li>
+      <li><code>"low"</code>, raw value 100..300</li>
+      <li><code>"medium"</code>, raw value 300..600</li>
+      <li><code>"high"</code>, raw value 600..1024</li>
+    </ul>
+  </p>
+</script>
+
+<script type="text/javascript">
+  RED.nodes.registerType('grovepi-air-quality', {
+    category: 'OpenDash GrovePi',
+    color: '#1ABC9C',
+    defaults: {
+      name: {value: ""},
+      mode: {value: "timer", required: true},
+      interval: {value: 1, required: true},
+      unit: {value: "s", required: true},
+      pin: {value: "2", required: true}
+    },
+    inputs: 0,
+    outputs: 1,
+    icon: "font-awesome/fa-wind",
+    label: function() {
+      return this.name || "Air Quality Sensor";
+    }
+  });
+</script>

@@ -410,4 +410,37 @@ module.exports = function(RED) {
     });
   }
   RED.nodes.registerType("grovepi-air-quality", AirQuality);
+
+  function GasSensor(config) {
+    RED.nodes.createNode(this, config);
+    this.pin = config.pin;
+    this.repeat = parseSamplingRate(config);
+    this.sensor = new AnalogSensor(this.pin);
+    this.lastValue = undefined;
+    this.valueTypes = [
+      {
+        name: "density",
+        type: "Number",
+      },
+    ];
+
+    var node = this;
+    node.interval = setInterval(function() {
+      var value = node.sensor.read() / 1024;
+      var msg = {
+        payload: value,
+        valueTypes: node.valueTypes,
+      };
+
+      setStatusValue(node, value);
+      node.send(msg);
+    }, node.repeat);
+
+    node.on('close', function(done) {
+      clearInterval(node.interval);
+      setStatusDone(node);
+      done();
+    });
+  }
+  RED.nodes.registerType("grovepi-gas-sensor", GasSensor);
 }

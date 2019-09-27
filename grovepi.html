@@ -846,3 +846,68 @@
     }
   });
 </script>
+
+<script type="text/x-red" data-template-name="grovepi-gas-sensor">
+    <div class="form-row" id="grovepi-pin-row">
+        <label for="node-input-pin"><i class="fa fa-plug"></i> Digital Pin</label>
+        <select id="node-input-pin">
+            <option value="0">Analog 0</option>
+            <option value="1">Analog 1</option>
+            <option value="2">Analog 2</option>
+        </select>
+    </div>
+    <div class="form-row" id="grovepi-mode-row">
+        <label for="node-input-mode"><i class="fa fa-plug"></i> Mode</label>
+        <select id="node-input-mode">
+            <option value="timer">Timer Mode</option>
+            <option value="event">Event Mode</option>
+        </select>
+    </div>
+    <div class="form-row interval-row" id="grovepi-interval-row">
+        <label for="node-input-interval"<i class="fa fa-repeat"></i> Interval</label>
+        <input id="node-input-interval" min="1" class="interval-time-count"></input>
+        <select style="width: 150px" id="node-input-unit">
+            <option value="ms" data-i18n="inject.milliseconds">Milliseconds</option>
+            <option value="s" data-i18n="inject.seconds">Seconds</option>
+            <option value="m" data-i18n="inject.minutes">Minutes</option>
+            <option value="h" data-i18n="inject.hours">Hours</option>
+        </select><br/>
+    </div>
+    <div class="form-row">
+        <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+</script>
+
+<script type="text/x-red" data-help-name="grovepi-gas-sensor">
+  <p>Reads values from a gas sensor.</p>
+
+  <h3>Outputs</h3>
+  <dl class="message-properties">
+    <dt>payload <span class="property-type">number</span></dt>
+    <dd> ranges from <code>0.0</code> or <code>1.0</code>.</dd>
+  </dl>
+
+  <h3>Details</h3>
+  <p>By default, the node sends a reading every 1 second, however this can be changed in the interval section of the nodes configuration.</p>
+</script>
+
+<script type="text/javascript">
+  RED.nodes.registerType('grovepi-gas-sensor', {
+    category: 'OpenDash GrovePi',
+    color: '#1ABC9C',
+    defaults: {
+      name: {value: ""},
+      mode: {value: "timer", required: true},
+      interval: {value: 1, required: true},
+      unit: {value: "s", required: true},
+      pin: {value: "2", required: true}
+    },
+    inputs: 0,
+    outputs: 1,
+    icon: "font-awesome/fa-burn",
+    label: function() {
+      return this.name || "Gas Sensor";
+    }
+  });
+</script>

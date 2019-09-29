@@ -423,18 +423,76 @@ module.exports = function(RED) {
         type: "Number",
       },
     ];
+    setupSensorNode(this);
+  }
+  RED.nodes.registerType("grovepi-gas-sensor", GasSensor);
+
+  function HeartRateBPM(config) {
+    RED.nodes.createNode(this, config);
+    this.pin = config.pin;
+    this.repeat = parseSamplingRate(config);
+    this.sensor = new DigitalSensor(this.pin);
+
+    this.valueTypes = [
+      {
+        name: "Rate",
+        unit: "BPM",
+        type: "Number",
+      },
+    ];
+
+    this.history = [];
+    this.lastReading = undefined;
+    this.lastDebounceTime = Date.now();
+    this.lastRiseTime = undefined;
+
+    this.value = undefined;
+    this.lastValue = undefined;
+
+    this.ringBuffer = [];
+    this.ringBufferIndex = 0;
+    this.ringBufferSize = 10;
 
     var node = this;
-    node.interval = setInterval(function() {
-      var value = node.sensor.read() / 1024;
-      var msg = {
-        payload: value,
-        valueTypes: node.valueTypes,
-      };
+    setStatusConnected(node);
 
-      setStatusValue(node, value);
-      node.send(msg);
-    }, node.repeat);
+    node.interval = setInterval(function() {
+      var reading = node.sensor.read();
+      console.log("Reading", reading);
+
+      var now = Date.now();
+      node.lastValue = node.value;
+      node.value = reading;
+
+      // Detect rises from 0 to 1
+      if (node.lastValue === 0 && node.value === 1) {
+        if (node.lastRiseTime) {
+          var delta = now - node.lastRiseTime;
+
+          // Add delta between rises to ring buffer
+          node.ringBuffer[node.ringBufferIndex] = delta;
+          node.ringBufferIndex = (node.ringBufferIndex + 1) % node.ringBufferSize;
+
+          // Average milliseconds between heartbeats
+          var average = 0.0;
+          node.ringBuffer.forEach(e => average += e);
+          average /= node.ringBuffer.length;
+
+          var bpm = 60000 / average;
+
+          var msg = {
+            payload: bpm,
+            valueTypes: node.valueTypes,
+          };
+
+          setStatusValue(node, bpm);
+          node.send(msg);
+        }
+        node.lastRiseTime = now;
+      }
+
+      node.lastReading = reading;
+    }, 50);
 
     node.on('close', function(done) {
       clearInterval(node.interval);
@@ -442,5 +500,5 @@ module.exports = function(RED) {
       done();
     });
   }
-  RED.nodes.registerType("grovepi-gas-sensor", GasSensor);
+  RED.nodes.registerType("grovepi-heart-rate-bpm", HeartRateBPM);
 }

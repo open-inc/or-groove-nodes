@@ -741,7 +741,7 @@
   <h3>Outputs</h3>
   <dl class="message-properties">
     <dt>payload <span class="property-type">number</span></dt>
-    <dd> ranges from <code>0</code> or <code>1023</code>.</dd>
+    <dd> ranges from <code>0</code> to <code>1023</code>.</dd>
   </dl>
 
   <h3>Details</h3>
@@ -885,7 +885,8 @@
   <h3>Outputs</h3>
   <dl class="message-properties">
     <dt>payload <span class="property-type">number</span></dt>
-    <dd> ranges from <code>0.0</code> or <code>1.0</code>.</dd>
+  <dd> ranges from <code>0</code> to <code>1024</code>,
+  a higher value means a higher gas concentration.</dd>
   </dl>
 
   <h3>Details</h3>
@@ -908,6 +909,58 @@
     icon: "font-awesome/fa-burn",
     label: function() {
       return this.name || "Gas Sensor";
+    }
+  });
+</script>
+
+<script type="text/x-red" data-template-name="grovepi-heart-rate-bpm">
+    <div class="form-row" id="grovepi-pin-row">
+        <label for="node-input-pin"><i class="fa fa-plug"></i> Digital Pin</label>
+        <select id="node-input-pin">
+            <option value="2">Digital 2</option>
+            <option value="3">Digital 3</option>
+            <option value="4">Digital 4</option>
+            <option value="5">Digital 5</option>
+            <option value="6">Digital 6</option>
+            <option value="7">Digital 7</option>
+            <option value="8">Digital 8</option>
+        </select>
+    </div>
+    <div class="form-row">
+        <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+</script>
+
+<script type="text/x-red" data-help-name="grovepi-heart-rate-bpm">
+  <p>Reads values from a heart rate sensor and calculates the average BPM.</p>
+
+  <h3>Outputs</h3>
+  <dl class="message-properties">
+    <dt>payload <span class="property-type">number</span></dt>
+  <dd> Heart rate, beats per minute (BPM).</dd>
+  </dl>
+
+  <h3>Details</h3>
+  <p>This node sends out readings at irregular intervals, depending on the current heart rate.</p>
+</script>
+
+<script type="text/javascript">
+  RED.nodes.registerType('grovepi-heart-rate-bpm', {
+    category: 'OpenDash GrovePi',
+    color: '#1ABC9C',
+    defaults: {
+      name: {value: ""},
+      mode: {value: "timer", required: true},
+      interval: {value: 1, required: true},
+      unit: {value: "s", required: true},
+      pin: {value: "2", required: true}
+    },
+    inputs: 0,
+    outputs: 1,
+    icon: "font-awesome/fa-love",
+    label: function() {
+      return this.name || "Heart Rate Sensor";
     }
   });
 </script>

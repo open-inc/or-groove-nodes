@@ -201,7 +201,7 @@ module.exports = function(RED) {
   }
   RED.nodes.registerType("grovepi-dht22", DHT22);
 
-  function PWM_LED(config) {
+  function AnalogOutput(config) {
     RED.nodes.createNode(this, config);
     this.pin = config.pin;
 
@@ -218,8 +218,8 @@ module.exports = function(RED) {
       setStatusDone(node);
     });
   }
-  RED.nodes.registerType("grovepi-pwm-led", PWM_LED);
-
+  RED.nodes.registerType("grovepi-pwm-led", AnalogOutput);
+  RED.nodes.registerType("grovepi-analog-output", AnalogOutput);
 
   function DigitalOutput(config) {
     RED.nodes.createNode(this, config);
@@ -241,6 +241,7 @@ module.exports = function(RED) {
   RED.nodes.registerType("grovepi-led", DigitalOutput);
   RED.nodes.registerType("grovepi-relay", DigitalOutput);
   RED.nodes.registerType("grovepi-buzzer", DigitalOutput);
+  RED.nodes.registerType("grovepi-digital-output", DigitalOutput);
 
   function RGB_LCD(config) {
     RED.nodes.createNode(this, config);
@@ -501,4 +502,36 @@ module.exports = function(RED) {
     });
   }
   RED.nodes.registerType("grovepi-heart-rate-bpm", HeartRateBPM);
+
+  function AnalogInput(config) {
+    RED.nodes.createNode(this, config);
+    this.pin = config.pin;
+    this.repeat = parseSamplingRate(config);
+    this.sensor = new AnalogSensor(this.pin);
+    this.lastValue = undefined;
+    this.valueTypes = [
+      {
+        name: "value",
+        type: "Number",
+      },
+    ];
+    setupSensorNode(this);
+  }
+  RED.nodes.registerType("grovepi-analog-input", AnalogInput);
+
+  function DigitalInput(config) {
+    RED.nodes.createNode(this, config);
+    this.pin = config.pin;
+    this.repeat = parseSamplingRate(config);
+    this.sensor = new DigitalSensor(this.pin);
+    this.lastValue = undefined;
+    this.valueTypes = [
+      {
+        name: "value",
+        type: "Number",
+      },
+    ];
+    setupSensorNode(this);
+  }
+  RED.nodes.registerType("grovepi-digital-input", DigitalInput);
 }

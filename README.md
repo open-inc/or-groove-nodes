@@ -2,31 +2,24 @@
 
 ## Nodes
 
+See <https://www.dexterindustries.com/GrovePi/engineering/port-description/>
+
+In addition to a node for each of the most common sensors,
+there are four “general” nodes.
+
+1. Digital Input, values: 0 or 1
+2. Analog Input, values: 0 to 1023
+3. Digital Output, values: 0 or 1
+4. Analog Output, values: 0 to 255
+
 ## `msg` Properties
 
 See <https://nodered.org/docs/user-guide/messages>
 
-Usually, the "value" of a message is stored in its ~payload~ field.
+Usually, the "value" of a message is stored in its `payload` field.
 To make integration with other nodes easy, the payload of a sensor
 message only contains its values, all additional information is stored
 in other properties.
-
-## Sensor Types
-
-See <https://www.dexterindustries.com/GrovePi/engineering/port-description/>
-
-### Digital Input
-
-### Digital Output
-
-### Analog Input
-
-### Analog Output (PWM)
-  Pins: D3, D5, D6
-
-### I2C Input
-
-### I2C Output
 
 ## Sensor Modes
 

@@ -534,4 +534,41 @@ module.exports = function(RED) {
     setupSensorNode(this);
   }
   RED.nodes.registerType("grovepi-digital-input", DigitalInput);
+
+  function GestureSensorNode(config) {
+    RED.nodes.createNode(this, config);
+    this.pin = config.pin;
+    this.sensor = new GestureSensor();
+    this.sensor.init();
+    setStatusConnected(this);
+
+    this.valueTypes = [
+      {
+        name: "gesture",
+        type: "String",
+      },
+    ];
+
+    var node = this;
+    this.interval = setInterval(function() {
+      node.sensor.readGesture((value) => {
+        if (value !== null) {
+          var msg = {
+            payload: value,
+            valueTypes: node.valueTypes,
+          };
+
+          setStatusValue(node, value);
+          node.send(msg);
+        }
+      });
+    }, 250);
+
+    this.on('close', function(done) {
+      clearInterval(node.interval);
+      setStatusDone(node);
+      done();
+    });
+  }
+  RED.nodes.registerType("grovepi-gesture-sensor", GestureSensorNode);
 }

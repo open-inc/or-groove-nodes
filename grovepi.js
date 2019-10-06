@@ -366,6 +366,23 @@ module.exports = function(RED) {
   }
   RED.nodes.registerType("grovepi-rotary", Rotary);
 
+  function LightSensor(config) {
+    RED.nodes.createNode(this, config);
+    this.pin = config.pin;
+    this.repeat = parseSamplingRate(config);
+    this.sensor = new AnalogSensor(this.pin);
+    this.lastValue = undefined;
+    this.valueTypes = [
+      {
+        name: "Brightness",
+        type: "Number",
+      }
+    ];
+
+    setupSensorNode(this);
+  }
+  RED.nodes.registerType("grovepi-light-sensor", LightSensor);
+
   function AirQuality(config) {
     RED.nodes.createNode(this, config);
     this.pin = config.pin;

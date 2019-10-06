@@ -1,5 +1,15 @@
 # OpenDASH GrovePI Nodes
 
+## Installation
+
+1. Add dependency to `.node_red/package.json`
+2. `npm install`
+3. `node-red-restart`
+
+## Sensors
+
+The bulue sensors are DHT11 humidity & temperature sensors.
+
 ## Nodes
 
 See <https://www.dexterindustries.com/GrovePi/engineering/port-description/>
@@ -20,6 +30,17 @@ Usually, the "value" of a message is stored in its `payload` field.
 To make integration with other nodes easy, the payload of a sensor
 message only contains its values, all additional information is stored
 in other properties.
+
+If a sensor returns multiple values (e.g. temperature and humidity),
+`msg.payload` is an array of these values.
+
+In addition to that, `msg.valueTypes` is an array of value type
+specifications `{unit: ..., name: ..., type: ...}`.
+
+This additional information is used for displaying sensor values on the LCD
+and when sending datapoints to the OpenDash platform.
+
+
 
 ## Sensor Modes
 

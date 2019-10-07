@@ -40,8 +40,6 @@ specifications `{unit: ..., name: ..., type: ...}`.
 This additional information is used for displaying sensor values on the LCD
 and when sending datapoints to the OpenDash platform.
 
-
-
 ## Sensor Modes
 
 Sensors can be used in two different configurations, in _live_ or in
@@ -58,6 +56,47 @@ stream for logging applications.
 
 To prevent wrongly configured sensors from hanging up the system,
 the fastest sampling rate allowed is once every 50ms.
+
+## Inputs / Sensors
+
+![](images/inputs.jpg)
+
+From left to right:
+
+1. Ultrasonic Ranger
+2. DTH22 Temperature & Humidity Sensor
+3. Light Sensor
+4. Loudness Sensor
+5. Button
+6. Rotary Angle Sensor
+7. Gas Sensor
+8. Air Quality Sensor
+
+At the bottom:
+
+1. Heart Rate Sensor
+
+## Outputs / Actuators
+
+![](images/outputs.jpg)
+
+From left to right:
+
+1. LCD RGB-Backlight
+2. LED
+3. Buzzer
+4. Relay
+
+## Sensors
+
+### I2C Sensors
+
+When connecting a I2C sensor, it doesn't matter which pin is used.
+
+### Loudness Sensor
+
+Records 5 samples per second, then sends out the average and the
+maximum value.
 
 ## Credits
 

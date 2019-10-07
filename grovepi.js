@@ -34,6 +34,7 @@ var DHTSensor = GrovePi.sensors.DHTDigital;
 
 var GrovePiWrapper = require('./lib/GrovePiWrapper');
 var GestureSensor = require('./lib/GestureSensor');
+var LoudnessSensor = require('./lib/LoudnessSensor');
 
 // Mark a node as connected
 function setStatusConnected(node) {
@@ -579,7 +580,8 @@ module.exports = function(RED) {
           node.send(msg);
         }
       });
-    }, 250);
+    // TODO: Dynamic polling once a gesture was read
+    }, 500);
 
     this.on('close', function(done) {
       clearInterval(node.interval);
@@ -588,4 +590,46 @@ module.exports = function(RED) {
     });
   }
   RED.nodes.registerType("grovepi-gesture-sensor", GestureSensorNode);
+
+  function LoudnessSensorNode(config) {
+    RED.nodes.createNode(this, config);
+    this.pin = config.pin;
+    this.sensor = new LoudnessSensor(this.pin, 10);
+    this.sensor.init();
+    this.repeat = parseSamplingRate(config);
+    setStatusConnected(this);
+
+    this.valueTypes = [
+      {
+        name: "average",
+        type: "Number",
+      },
+      {
+        name: "maximum",
+        type: "Number",
+      },
+    ];
+
+    var node = this;
+    this.interval = setInterval(function() {
+      let { max, avg } = node.sensor.readAvgMax();
+
+      let value = [avg, max];
+
+      var msg = {
+        payload: value,
+        valueTypes: node.valueTypes,
+      };
+
+      setStatusValue(node, value);
+      node.send(msg);
+    }, this.repeat);
+
+    this.on('close', function(done) {
+      clearInterval(node.interval);
+      setStatusDone(node);
+      done();
+    });
+  }
+  RED.nodes.registerType("grovepi-loudness-sensor", LoudnessSensorNode);
 }

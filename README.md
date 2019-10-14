@@ -1,14 +1,15 @@
 # OpenDASH GrovePI Nodes
 
+[Package on npm](https://www.npmjs.com/package/node-red-contrib-od-grovepi)
+
 ## Installation
 
-1. Add dependency to `.node_red/package.json`
-2. `npm install`
-3. `node-red-restart`
+1. `npm install -s node-red-contrib-od-grovepi`
+2. `node-red-restart`
 
 ## Sensors
 
-The bulue sensors are DHT11 humidity & temperature sensors.
+The blue sensors are DHT11 humidity & temperature sensors.
 
 ## Nodes
 

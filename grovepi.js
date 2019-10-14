@@ -70,22 +70,22 @@ function setStatusDone(node) {
 function setupSensorNode(node) {
   setStatusConnected(node);
 
-  // if (node.mode === "event") {
-  //   node.interval = setInterval(function() {
-  //     var value = node.sensor.read();
+  if (node.mode === "event") {
+    node.interval = setInterval(function() {
+      var value = node.sensor.read();
 
-  //     if (value !== node.lastValue) {
-  //       node.lastValue = value;
-  //       var msg = {
-  //         payload: value,
-  //         valueTypes: node.valueTypes,
-  //       };
+      if (value !== node.lastValue) {
+        node.lastValue = value;
+        var msg = {
+          payload: value,
+          valueTypes: node.valueTypes,
+        };
 
-  //       setStatusValue(node, value);
-  //       node.send(msg);
-  //     }
-  //   }, 100);
-  // } else {
+        setStatusValue(node, value);
+        node.send(msg);
+      }
+    }, 100);
+  } else {
     node.interval = setInterval(function() {
       var value = node.sensor.read();
       var msg = {
@@ -96,7 +96,7 @@ function setupSensorNode(node) {
       setStatusValue(node, value);
       node.send(msg);
     }, node.repeat);
-  // }
+  }
 
   node.on('close', function(done) {
     clearInterval(node.interval);

@@ -3,7 +3,7 @@
   "version"      : "0.0.1",
   "description"  : "Node Red Nodes for GrovePi, for use with OpenDASH",
   "license"      : "Apache-2.0",
-  "main"		   : "grovepi.js",
+  "main"	 : "grovepi.js",
   "keywords": [
     "node-red",
     "iot",
@@ -26,6 +26,6 @@
   },
   "author": {
     "name": "Leon Rische",
-    "email": "node@leonrische.me"
+    "email": "npm@leonrische.me"
   }
 }

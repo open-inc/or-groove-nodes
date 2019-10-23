@@ -1,5 +1,5 @@
-<script type="text/x-red" data-help-name="od-converter-nodered">
-  <p>Converts data to open.DASH JSON Format</p>
+<script type="text/x-red" data-help-name="od-attach-metadata">
+  <p>Attaches open.DASH metadata to messages</p>
 
   <h3>Inputs</h3>
       <dl class="message-properties">
@@ -11,8 +11,8 @@
           <dd> Timestamp in milliseconds, which should be used (defaults to current Timestamp)</dd>
           <dt class="optional">sensorid <span class="property-type">string</span></dt>
           <dd> Sensor ID to be used (defaults to configured sensorid) </dd>
-          <dt class="optional">owner <span class="property-type">string</span></dt>
-          <dd> Key for the data source to be used (defaults to configured owner)</dd>
+          <dt class="optional">user <span class="property-type">string</span></dt>
+          <dd> Key for the data source to be used (defaults to configured user)</dd>
       </dl>
 
    <h3>Outputs</h3>
@@ -27,16 +27,16 @@
 
   <h3>Details</h3>
       <p><code>msg.payload</code> is used as the payload and contains the values.</p>
-      <p>If provided <code>msg.owner</code>, <code>msg.date</code>, <code>msg.sensorid</code>, will be used in the resulting JSON Object.</p>
+      <p>If provided <code>msg.user</code>, <code>msg.date</code>, <code>msg.sensorid</code>, will be used in the resulting JSON Object.</p>
 
   <h3>References</h3>
       <ul>
           <li><a href="https://docs.opendash.de">open.DASH docs</a></li>
       </ul>
 </script>
-<script type="text/x-red" data-template-name="od-converter-nodered">
+<script type="text/x-red" data-template-name="od-attach-metadata">
   <div class="form-row">
-    <label for="node-input-name"><i class="fa fa-tag"></i> Node-Name</label>
+    <label for="node-input-name"><i class="fa fa-tag"></i> Node Name</label>
     <input type="text" id="node-input-name" placeholder="Name für Knoten">
   </div>
   <div class="form-row">
@@ -48,29 +48,25 @@
     <input type="text" id="node-input-sensorname" placeholder="Name für den Sensorwert, bspw. Temperatur">
   </div>
   <div class="form-row">
-    <label for="node-input-owner"><i class="fa fa-tag"></i> Nutzer / Datenquelle</label>
-    <input type="text" id="node-input-owner" placeholder="Datenquelle / Nutzername">
-  </div>
-  <div class="form-row">
     <label for="node-input-dimCount"><i class="fa fa-tag"></i> Anzahl der Werte des Sensors</label>
     <input type="number" id="node-input-dimCount" placeholder="Dimensionzahl des Sensors, bspw. 2 für GPS (Lat,Lon)">
   </div>
   <div id="valueTypes"><div>
 </script>
 
-<script type="text/x-red" data-help-name="od-converter-nodered">
+<script type="text/x-red" data-help-name="od-attach-metadata">
   <p>Ein Knoten, um die  Ausgabe von Sensoren in das JSON-Datenformat des open.DASH Dashboardes zu konvertieren.</p>
 </script>
 
 <script type="text/javascript">
-  RED.nodes.registerType("od-converter-nodered", {
+  RED.nodes.registerType("od-attach-metadata", {
     category: 'OpenDash GrovePi',
     color: "#F3B567",
     defaults: {
       sensorid: {},
       dimCount: { value: 1 },
       name: {},
-      owner: {},
+      user: {},
       valueTypes: {},
       sensorname: {}
     },
@@ -152,13 +148,9 @@
         }
       }
     },
+    paletteLabel: "Attach Metadata",
     label: function() {
-      return this.name || "open.DASH JSON-Converter";
+      return this.name || "Attach Metadata";
     },
-    paletteLabel: "open.DASH JSON",
-    labelStyle: function() {
-      return this.name ? "node_label_italic" : "";
-    },
-    settings: {}
   });
 </script>

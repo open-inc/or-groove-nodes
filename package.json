@@ -21,7 +21,7 @@
     "nodes": {
       "grovepi": "grovepi.js",
       "rmq": "rmq.js",
-      "json": "json.js"
+      "metadata": "metadata.js"
     }
   },
   "author": {

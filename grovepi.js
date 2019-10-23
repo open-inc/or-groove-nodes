@@ -70,33 +70,18 @@ function setStatusDone(node) {
 function setupSensorNode(node) {
   setStatusConnected(node);
 
-  if (node.mode === "event") {
-    node.interval = setInterval(function() {
-      var value = node.sensor.read();
+  node.interval = setInterval(function() {
+    var value = node.sensor.read();
+    var msg = {
+      payload: value,
+      valueTypes: node.valueTypes,
+      sensorname: node.sensorname,
+      sensorid: node.sensorid,
+    };
 
-      if (value !== node.lastValue) {
-        node.lastValue = value;
-        var msg = {
-          payload: value,
-          valueTypes: node.valueTypes,
-        };
-
-        setStatusValue(node, value);
-        node.send(msg);
-      }
-    }, 100);
-  } else {
-    node.interval = setInterval(function() {
-      var value = node.sensor.read();
-      var msg = {
-        payload: value,
-        valueTypes: node.valueTypes,
-      };
-
-      setStatusValue(node, value);
-      node.send(msg);
-    }, node.repeat);
-  }
+    setStatusValue(node, value);
+    node.send(msg);
+  }, node.repeat);
 
   node.on('close', function(done) {
     clearInterval(node.interval);
@@ -130,10 +115,10 @@ module.exports = function(RED) {
   function UltrasonicRangeSensor(config) {
     RED.nodes.createNode(this, config);
     this.pin = config.pin;
+    this.sensorname = config.sensorname;
+    this.sensorid = config.sensorid;
     this.sensor = new UltrasonicSensor(config.pin);
     this.repeat = parseSamplingRate(config);
-    this.mode = config.mode;
-    this.lastValue = undefined;
     this.valueTypes = [{
       name: "Distance",
       unit: "cm",
@@ -147,11 +132,10 @@ module.exports = function(RED) {
   function DHT11(config) {
     RED.nodes.createNode(this, config);
     this.pin = config.pin;
+    this.sensorname = config.sensorname;
+    this.sensorid = config.sensorid;
     this.sensor = new DHTSensor(config.pin, '0');
     this.repeat = parseSamplingRate(config);
-    // The DHT11 & DHT22 sensors are not fast enough to be run in event mode
-    this.mode = "timer";
-    this.lastValue = undefined;
     this.valueTypes = [
       {
         name: "Temperature",
@@ -165,6 +149,7 @@ module.exports = function(RED) {
       },
       {
         name: "Heat Index",
+        unit: "C",
         type: "Number",
       }
     ];
@@ -176,11 +161,10 @@ module.exports = function(RED) {
   function DHT22(config) {
     RED.nodes.createNode(this, config);
     this.pin = config.pin;
+    this.sensorname = config.sensorname;
+    this.sensorid = config.sensorid;
     this.sensor = new DHTSensor(config.pin, '1');
     this.repeat = parseSamplingRate(config);
-    // The DHT11 & DHT22 sensors are not fast enough to be run in event mode
-    this.mode = "timer";
-    this.lastValue = undefined;
     this.valueTypes = [
       {
         name: "Temperature",
@@ -194,6 +178,7 @@ module.exports = function(RED) {
       },
       {
         name: "Heat Index",
+        unit: "C",
         type: "Number",
       }
     ];
@@ -281,11 +266,11 @@ module.exports = function(RED) {
 
         // If the number is a floating point value, truncate it to two decimal places
         if (typeof value === 'number') {
-            if (value % 1.0 == 0.0) {
-              line += value;
-            } else {
-              line += value.toFixed(2);
-            }
+          if (value % 1.0 == 0.0) {
+            line += value;
+          } else {
+            line += value.toFixed(2);
+          }
         } else {
           line += value;
         }
@@ -317,10 +302,10 @@ module.exports = function(RED) {
   function Button(config) {
     RED.nodes.createNode(this, config);
     this.pin = config.pin;
+    this.sensorname = config.sensorname;
+    this.sensorid = config.sensorid;
     this.repeat = parseSamplingRate(config);
     this.sensor = new DigitalSensor(this.pin);
-    this.mode = config.mode;
-    this.lastValue = undefined;
     this.valueTypes = [
       {
         name: "Button State",
@@ -335,10 +320,10 @@ module.exports = function(RED) {
   function HeartRate(config) {
     RED.nodes.createNode(this, config);
     this.pin = config.pin;
+    this.sensorname = config.sensorname;
+    this.sensorid = config.sensorid;
     this.repeat = parseSamplingRate(config);
     this.sensor = new DigitalSensor(this.pin);
-    this.mode = config.mode;
-    this.lastValue = undefined;
     this.valueTypes = [
       {
         name: "Reading",
@@ -353,9 +338,10 @@ module.exports = function(RED) {
   function Rotary(config) {
     RED.nodes.createNode(this, config);
     this.pin = config.pin;
+    this.sensorname = config.sensorname;
+    this.sensorid = config.sensorid;
     this.repeat = parseSamplingRate(config);
     this.sensor = new AnalogSensor(this.pin);
-    this.lastValue = undefined;
     this.valueTypes = [
       {
         name: "Rotation",
@@ -370,9 +356,10 @@ module.exports = function(RED) {
   function LightSensor(config) {
     RED.nodes.createNode(this, config);
     this.pin = config.pin;
+    this.sensorname = config.sensorname;
+    this.sensorid = config.sensorid;
     this.repeat = parseSamplingRate(config);
     this.sensor = new AnalogSensor(this.pin);
-    this.lastValue = undefined;
     this.valueTypes = [
       {
         name: "Brightness",
@@ -387,9 +374,10 @@ module.exports = function(RED) {
   function AirQuality(config) {
     RED.nodes.createNode(this, config);
     this.pin = config.pin;
+    this.sensorname = config.sensorname;
+    this.sensorid = config.sensorid;
     this.repeat = parseSamplingRate(config);
     this.sensor = new AnalogSensor(this.pin);
-    this.lastValue = undefined;
     this.valueTypes = [
       {
         name: "Raw",
@@ -416,6 +404,8 @@ module.exports = function(RED) {
       var msg = {
         payload: [value, rating],
         valueTypes: node.valueTypes,
+        sensorname: node.sensorname,
+        sensorid: node.sensorid,
       };
 
       setStatusValue(node, value);
@@ -433,9 +423,10 @@ module.exports = function(RED) {
   function GasSensor(config) {
     RED.nodes.createNode(this, config);
     this.pin = config.pin;
+    this.sensorname = config.sensorname;
+    this.sensorid = config.sensorid;
     this.repeat = parseSamplingRate(config);
     this.sensor = new AnalogSensor(this.pin);
-    this.lastValue = undefined;
     this.valueTypes = [
       {
         name: "density",
@@ -449,6 +440,8 @@ module.exports = function(RED) {
   function HeartRateBPM(config) {
     RED.nodes.createNode(this, config);
     this.pin = config.pin;
+    this.sensorname = config.sensorname;
+    this.sensorid = config.sensorid;
     this.repeat = parseSamplingRate(config);
     this.sensor = new DigitalSensor(this.pin);
 
@@ -502,6 +495,8 @@ module.exports = function(RED) {
           var msg = {
             payload: bpm,
             valueTypes: node.valueTypes,
+            sensorname: node.sensorname,
+            sensorid: node.sensorid,
           };
 
           setStatusValue(node, bpm);
@@ -524,9 +519,10 @@ module.exports = function(RED) {
   function AnalogInput(config) {
     RED.nodes.createNode(this, config);
     this.pin = config.pin;
+    this.sensorname = config.sensorname;
+    this.sensorid = config.sensorid;
     this.repeat = parseSamplingRate(config);
     this.sensor = new AnalogSensor(this.pin);
-    this.lastValue = undefined;
     this.valueTypes = [
       {
         name: "value",
@@ -540,9 +536,10 @@ module.exports = function(RED) {
   function DigitalInput(config) {
     RED.nodes.createNode(this, config);
     this.pin = config.pin;
+    this.sensorname = config.sensorname;
+    this.sensorid = config.sensorid;
     this.repeat = parseSamplingRate(config);
     this.sensor = new DigitalSensor(this.pin);
-    this.lastValue = undefined;
     this.valueTypes = [
       {
         name: "value",
@@ -556,6 +553,8 @@ module.exports = function(RED) {
   function GestureSensorNode(config) {
     RED.nodes.createNode(this, config);
     this.pin = config.pin;
+    this.sensorname = config.sensorname;
+    this.sensorid = config.sensorid;
     this.sensor = new GestureSensor();
     this.sensor.init();
     setStatusConnected(this);
@@ -568,23 +567,20 @@ module.exports = function(RED) {
     ];
 
     var node = this;
-    this.interval = setInterval(function() {
-      node.sensor.readGesture((value) => {
-        if (value !== null) {
-          var msg = {
-            payload: value,
-            valueTypes: node.valueTypes,
-          };
+    node.sensor.readGestures((value) => {
+      var msg = {
+        payload: value,
+        valueTypes: node.valueTypes,
+        sensorname: node.sensorname,
+        sensorid: node.sensorid,
+      };
 
-          setStatusValue(node, value);
-          node.send(msg);
-        }
-      });
-    // TODO: Dynamic polling once a gesture was read
-    }, 500);
+      setStatusValue(node, value);
+      node.send(msg);
+    });
 
     this.on('close', function(done) {
-      clearInterval(node.interval);
+      node.sensor.close();
       setStatusDone(node);
       done();
     });
@@ -594,6 +590,8 @@ module.exports = function(RED) {
   function LoudnessSensorNode(config) {
     RED.nodes.createNode(this, config);
     this.pin = config.pin;
+    this.sensorname = config.sensorname;
+    this.sensorid = config.sensorid;
     this.sensor = new LoudnessSensor(this.pin, 10);
     this.sensor.init();
     this.repeat = parseSamplingRate(config);
@@ -619,6 +617,8 @@ module.exports = function(RED) {
       var msg = {
         payload: value,
         valueTypes: node.valueTypes,
+        sensorname: node.sensorname,
+        sensorid: node.sensorid,
       };
 
       setStatusValue(node, value);

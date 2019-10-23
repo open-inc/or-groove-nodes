@@ -36,8 +36,16 @@
         </select>
     </div>
     <div class="form-row">
-        <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+        <label for="node-input-name"><i class="icon-tag"></i> Node Name</label>
         <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+    <div class="form-row">
+        <label for="node-input-name"><i class="icon-tag"></i> Sensor Name</label>
+        <input type="text" id="node-input-sensorname" placeholder="Sensor Name">
+    </div>
+    <div class="form-row">
+        <label for="node-input-name"><i class="icon-tag"></i> Sensor ID</label>
+        <input type="text" id="node-input-sensorid" placeholder="Sensor ID">
     </div>
 </script>
 
@@ -69,6 +77,7 @@
         inputs: 1,
         outputs: 0,
         icon: "font-awesome/fa-lightbulb-o",
+        paletteLabel: "LED (PWM)",
         label: function() {
             return this.name || "LED (PWM)";
         }
@@ -90,7 +99,7 @@
         </select>
     </div>
     <div class="form-row">
-        <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+        <label for="node-input-name"><i class="icon-tag"></i> Node Name</label>
         <input type="text" id="node-input-name" placeholder="Name">
     </div>
 </script>
@@ -122,6 +131,7 @@
         inputs: 1,
         outputs: 0,
         icon: "font-awesome/fa-lightbulb-o",
+        paletteLabel: "LED",
         label: function() {
             return this.name || "LED";
         }
@@ -142,13 +152,6 @@
             <option value="8">D8</option>
         </select>
     </div>
-    <div class="form-row" id="grovepi-mode-row">
-        <label for="node-input-mode"><i class="fa fa-plug"></i> Mode</label>
-        <select id="node-input-mode">
-            <option value="timer">Timer Mode</option>
-            <option value="event">Event Mode</option>
-        </select>
-    </div>
     <div class="form-row interval-row" id="grovepi-interval-row">
         <label for="node-input-interval"<i class="fa fa-repeat"></i> Interval</label>
         <input id="node-input-interval" min="1" class="interval-time-count"></input>
@@ -160,8 +163,16 @@
         </select><br/>
     </div>
     <div class="form-row">
-        <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+        <label for="node-input-name"><i class="icon-tag"></i> Node Name</label>
         <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+    <div class="form-row">
+        <label for="node-input-name"><i class="icon-tag"></i> Sensor Name</label>
+        <input type="text" id="node-input-sensorname" placeholder="Sensor Name">
+    </div>
+    <div class="form-row">
+        <label for="node-input-name"><i class="icon-tag"></i> Sensor ID</label>
+        <input type="text" id="node-input-sensorid" placeholder="Sensor ID">
     </div>
 </script>
 
@@ -187,11 +198,14 @@
       mode: {value: "timer", required: true},
       interval: {value: 1, required: true},
       unit: {value: "s", required: true},
-      pin: {value:"2", required: true}
+      pin: {value:"2", required: true},
+      sensorname: {value: "Ultrasonic Ranger"},
+      sensorid: {value: "grovepi.ultrasonic-ranger.1"},
     },
     inputs: 0,
     outputs: 1,
     icon: "font-awesome/fa-wifi",
+    paletteLabel: "Ultrasonic Ranger",
     label: function() {
       return this.name || "Ultrasonic Ranger";
     }
@@ -202,7 +216,7 @@
 <!-- Grove Pi LCD-RGB Output Node -->
 <script type="text/x-red" data-template-name="grovepi-rgblcd">
     <div class="form-row">
-        <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+        <label for="node-input-name"><i class="icon-tag"></i> Node Name</label>
         <input type="text" id="node-input-name" placeholder="Name">
     </div>
 </script>
@@ -245,6 +259,7 @@
         inputs:1,
         outputs:0,
       icon: "font-awesome/fa-desktop",
+      paletteLabel: "LCD RGB-Backlight",
         label: function() {
             return this.name||"LCD RGB-Backlight";
         }
@@ -254,7 +269,7 @@
 <!-- Grove Pi Datapoint LCD-RGB Output Node -->
 <script type="text/x-red" data-template-name="grovepi-datapoint-lcd">
     <div class="form-row">
-        <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+        <label for="node-input-name"><i class="icon-tag"></i> Node Name</label>
         <input type="text" id="node-input-name" placeholder="Name">
     </div>
 </script>
@@ -288,6 +303,7 @@
         inputs:1,
         outputs:0,
       icon: "font-awesome/fa-desktop",
+      paletteLabel: "Datapoint LCD",
         label: function() {
             return this.name||"Datapoint LCD";
         }
@@ -309,7 +325,7 @@
         </select>
     </div>
     <div class="form-row">
-        <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+        <label for="node-input-name"><i class="icon-tag"></i> Node Name</label>
         <input type="text" id="node-input-name" placeholder="Name">
     </div>
 </script>
@@ -347,6 +363,7 @@
         inputs: 1,
         outputs: 0,
       icon: "font-awesome/fa-plug",
+      paletteLabel: "Relay",
         label: function() {
             return this.name || "Relay";
         }
@@ -368,7 +385,7 @@
         </select>
     </div>
     <div class="form-row">
-        <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+        <label for="node-input-name"><i class="icon-tag"></i> Node Name</label>
         <input type="text" id="node-input-name" placeholder="Name">
     </div>
 </script>
@@ -402,6 +419,7 @@
         inputs: 1,
         outputs: 0,
         icon: "font-awesome/fa-volume-up",
+      paletteLabel: "Buzzer",
         label: function() {
             return this.name || "Buzzer";
         }
@@ -432,8 +450,16 @@
         </select><br/>
     </div>
     <div class="form-row">
-        <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+        <label for="node-input-name"><i class="icon-tag"></i> Node Name</label>
         <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+    <div class="form-row">
+        <label for="node-input-name"><i class="icon-tag"></i> Sensor Name</label>
+        <input type="text" id="node-input-sensorname" placeholder="Sensor Name">
+    </div>
+    <div class="form-row">
+        <label for="node-input-name"><i class="icon-tag"></i> Sensor ID</label>
+        <input type="text" id="node-input-sensorid" placeholder="Sensor ID">
     </div>
 </script>
 
@@ -465,11 +491,14 @@
       name: {value:""},
       interval: {value: 1, required: true},
       unit: {value: "s", required: true},
-      pin: {value:"2", required: true}
+      pin: {value:"2", required: true},
+      sensorname: {value: "DHT11"},
+      sensorid: {value: "dht11.1"},
     },
     inputs: 0,
     outputs: 1,
     icon: "font-awesome/fa-cloud",
+    paletteLabel: "Temperature & Humidity Sensor (DHT11)",
     label: function() {
       return this.name || "Temperature & Humidity Sensor";
     }
@@ -500,8 +529,16 @@
         </select><br/>
     </div>
     <div class="form-row">
-        <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+        <label for="node-input-name"><i class="icon-tag"></i> Node Name</label>
         <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+    <div class="form-row">
+        <label for="node-input-name"><i class="icon-tag"></i> Sensor Name</label>
+        <input type="text" id="node-input-sensorname" placeholder="Sensor Name">
+    </div>
+    <div class="form-row">
+        <label for="node-input-name"><i class="icon-tag"></i> Sensor ID</label>
+        <input type="text" id="node-input-sensorid" placeholder="Sensor ID">
     </div>
 </script>
 
@@ -533,11 +570,14 @@
       name: {value:""},
       interval: {value: 1, required: true},
       unit: {value: "s", required: true},
-      pin: {value:"2", required: true}
+      pin: {value:"2", required: true},
+      sensorname: {value: "DHT22"},
+      sensorid: {value: "dht22.1"},
     },
     inputs: 0,
     outputs: 1,
     icon: "font-awesome/fa-cloud",
+    paletteLabel: "Temperature & Humidity Sensor (DHT22)",
     label: function() {
       return this.name || "Temperature & Humidity Sensor";
     }
@@ -557,13 +597,6 @@
             <option value="8">D8</option>
         </select>
     </div>
-    <div class="form-row" id="grovepi-mode-row">
-        <label for="node-input-mode"><i class="fa fa-plug"></i> Mode</label>
-        <select id="node-input-mode">
-            <option value="timer">Timer Mode</option>
-            <option value="event">Event Mode</option>
-        </select>
-    </div>
     <div class="form-row interval-row" id="grovepi-interval-row">
         <label for="node-input-interval"<i class="fa fa-repeat"></i> Interval</label>
         <input id="node-input-interval" min="1" class="interval-time-count"></input>
@@ -575,8 +608,16 @@
         </select><br/>
     </div>
     <div class="form-row">
-        <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+        <label for="node-input-name"><i class="icon-tag"></i> Node Name</label>
         <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+    <div class="form-row">
+        <label for="node-input-name"><i class="icon-tag"></i> Sensor Name</label>
+        <input type="text" id="node-input-sensorname" placeholder="Sensor Name">
+    </div>
+    <div class="form-row">
+        <label for="node-input-name"><i class="icon-tag"></i> Sensor ID</label>
+        <input type="text" id="node-input-sensorid" placeholder="Sensor ID">
     </div>
 </script>
 
@@ -602,11 +643,14 @@
       mode: {value: "timer", required: true},
       interval: {value: 1, required: true},
       unit: {value: "s", required: true},
-      pin: {value: "2", required: true}
+      pin: {value: "2", required: true},
+      sensorname: {value: "Button"},
+      sensorid: {value: "grovepi.button.1"},
     },
     inputs: 0,
     outputs: 1,
     icon: "font-awesome/fa-toggle-on",
+    paletteLabel: "Button",
     label: function() {
       return this.name || "Button";
     }
@@ -626,13 +670,6 @@
             <option value="8">D8</option>
         </select>
     </div>
-    <div class="form-row" id="grovepi-mode-row">
-        <label for="node-input-mode"><i class="fa fa-plug"></i> Mode</label>
-        <select id="node-input-mode">
-            <option value="timer">Timer Mode</option>
-            <option value="event">Event Mode</option>
-        </select>
-    </div>
     <div class="form-row interval-row" id="grovepi-interval-row">
         <label for="node-input-interval"<i class="fa fa-repeat"></i> Interval</label>
         <input id="node-input-interval" min="1" class="interval-time-count"></input>
@@ -644,8 +681,16 @@
         </select><br/>
     </div>
     <div class="form-row">
-        <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+        <label for="node-input-name"><i class="icon-tag"></i> Node Name</label>
         <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+    <div class="form-row">
+        <label for="node-input-name"><i class="icon-tag"></i> Sensor Name</label>
+        <input type="text" id="node-input-sensorname" placeholder="Sensor Name">
+    </div>
+    <div class="form-row">
+        <label for="node-input-name"><i class="icon-tag"></i> Sensor ID</label>
+        <input type="text" id="node-input-sensorid" placeholder="Sensor ID">
     </div>
 </script>
 
@@ -676,11 +721,14 @@
       mode: {value: "timer", required: true},
       interval: {value: 1, required: true},
       unit: {value: "s", required: true},
-      pin: {value: "2", required: true}
+      pin: {value: "2", required: true},
+      sensorname: {value: "Heart Rate Sensor"},
+      sensorid: {value: "grovepi.heart-rate.1"},
     },
     inputs: 0,
     outputs: 1,
     icon: "font-awesome/fa-heart",
+    paletteLabel: "Heart Rate Sensor",
     label: function() {
       return this.name || "Heart Rate Sensor";
     }
@@ -696,13 +744,6 @@
             <option value="2">A2</option>
         </select>
     </div>
-    <div class="form-row" id="grovepi-mode-row">
-        <label for="node-input-mode"><i class="fa fa-plug"></i> Mode</label>
-        <select id="node-input-mode">
-            <option value="timer">Timer Mode</option>
-            <option value="event">Event Mode</option>
-        </select>
-    </div>
     <div class="form-row interval-row" id="grovepi-interval-row">
         <label for="node-input-interval"<i class="fa fa-repeat"></i> Interval</label>
         <input id="node-input-interval" min="1" class="interval-time-count"></input>
@@ -714,8 +755,16 @@
         </select><br/>
     </div>
     <div class="form-row">
-        <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+        <label for="node-input-name"><i class="icon-tag"></i> Node Name</label>
         <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+    <div class="form-row">
+        <label for="node-input-name"><i class="icon-tag"></i> Sensor Name</label>
+        <input type="text" id="node-input-sensorname" placeholder="Sensor Name">
+    </div>
+    <div class="form-row">
+        <label for="node-input-name"><i class="icon-tag"></i> Sensor ID</label>
+        <input type="text" id="node-input-sensorid" placeholder="Sensor ID">
     </div>
 </script>
 
@@ -741,11 +790,14 @@
       mode: {value: "timer", required: true},
       interval: {value: 1, required: true},
       unit: {value: "s", required: true},
-      pin: {value: "2", required: true}
+      pin: {value: "2", required: true},
+      sensorname: {value: "Rotary Angle Sensor"},
+      sensorid: {value: "grovepi.rotary.1"},
     },
     inputs: 0,
     outputs: 1,
     icon: "font-awesome/fa-repeat",
+    paletteLabel: "Rotary Angle Sensor",
     label: function() {
       return this.name || "Rotary Angle Sensor";
     }
@@ -761,13 +813,6 @@
             <option value="2">A2</option>
         </select>
     </div>
-    <div class="form-row" id="grovepi-mode-row">
-        <label for="node-input-mode"><i class="fa fa-plug"></i> Mode</label>
-        <select id="node-input-mode">
-            <option value="timer">Timer Mode</option>
-            <option value="event">Event Mode</option>
-        </select>
-    </div>
     <div class="form-row interval-row" id="grovepi-interval-row">
         <label for="node-input-interval"<i class="fa fa-repeat"></i> Interval</label>
         <input id="node-input-interval" min="1" class="interval-time-count"></input>
@@ -779,8 +824,16 @@
         </select><br/>
     </div>
     <div class="form-row">
-        <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+        <label for="node-input-name"><i class="icon-tag"></i> Node Name</label>
         <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+    <div class="form-row">
+        <label for="node-input-name"><i class="icon-tag"></i> Sensor Name</label>
+        <input type="text" id="node-input-sensorname" placeholder="Sensor Name">
+    </div>
+    <div class="form-row">
+        <label for="node-input-name"><i class="icon-tag"></i> Sensor ID</label>
+        <input type="text" id="node-input-sensorid" placeholder="Sensor ID">
     </div>
 </script>
 
@@ -820,11 +873,14 @@
       mode: {value: "timer", required: true},
       interval: {value: 1, required: true},
       unit: {value: "s", required: true},
-      pin: {value: "2", required: true}
+      pin: {value: "2", required: true},
+      sensorname: {value: "Air Quality Sensor"},
+      sensorid: {value: "grovepi.air-quality.1"},
     },
     inputs: 0,
     outputs: 1,
     icon: "font-awesome/fa-smog",
+    paletteLabel: "Air Quality Sensor",
     label: function() {
       return this.name || "Air Quality Sensor";
     }
@@ -840,13 +896,6 @@
             <option value="2">A2</option>
         </select>
     </div>
-    <div class="form-row" id="grovepi-mode-row">
-        <label for="node-input-mode"><i class="fa fa-plug"></i> Mode</label>
-        <select id="node-input-mode">
-            <option value="timer">Timer Mode</option>
-            <option value="event">Event Mode</option>
-        </select>
-    </div>
     <div class="form-row interval-row" id="grovepi-interval-row">
         <label for="node-input-interval"<i class="fa fa-repeat"></i> Interval</label>
         <input id="node-input-interval" min="1" class="interval-time-count"></input>
@@ -858,8 +907,16 @@
         </select><br/>
     </div>
     <div class="form-row">
-        <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+        <label for="node-input-name"><i class="icon-tag"></i> Node Name</label>
         <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+    <div class="form-row">
+        <label for="node-input-name"><i class="icon-tag"></i> Sensor Name</label>
+        <input type="text" id="node-input-sensorname" placeholder="Sensor Name">
+    </div>
+    <div class="form-row">
+        <label for="node-input-name"><i class="icon-tag"></i> Sensor ID</label>
+        <input type="text" id="node-input-sensorid" placeholder="Sensor ID">
     </div>
 </script>
 
@@ -886,11 +943,14 @@
       mode: {value: "timer", required: true},
       interval: {value: 1, required: true},
       unit: {value: "s", required: true},
-      pin: {value: "2", required: true}
+      pin: {value: "2", required: true},
+      sensorname: {value: "Gas Sensor"},
+      sensorid: {value: "gas.1"},
     },
     inputs: 0,
     outputs: 1,
     icon: "font-awesome/fa-wind",
+    paletteLabel: "Gas Sensor",
     label: function() {
       return this.name || "Gas Sensor";
     }
@@ -911,8 +971,16 @@
         </select>
     </div>
     <div class="form-row">
-        <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+        <label for="node-input-name"><i class="icon-tag"></i> Node Name</label>
         <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+    <div class="form-row">
+        <label for="node-input-name"><i class="icon-tag"></i> Sensor Name</label>
+        <input type="text" id="node-input-sensorname" placeholder="Sensor Name">
+    </div>
+    <div class="form-row">
+        <label for="node-input-name"><i class="icon-tag"></i> Sensor ID</label>
+        <input type="text" id="node-input-sensorid" placeholder="Sensor ID">
     </div>
 </script>
 
@@ -938,11 +1006,14 @@
       mode: {value: "timer", required: true},
       interval: {value: 1, required: true},
       unit: {value: "s", required: true},
-      pin: {value: "2", required: true}
+      pin: {value: "2", required: true},
+      sensorname: {value: "Heart Rate Sensor (BPM)"},
+      sensorid: {value: "grovepi.heart-rate-bpm.1"},
     },
     inputs: 0,
     outputs: 1,
     icon: "font-awesome/fa-heartbeat",
+    paletteLabel: "Heart Rate Sensor (BPM)",
     label: function() {
       return this.name || "Heart Rate Sensor";
     }
@@ -961,7 +1032,7 @@
         </select>
     </div>
     <div class="form-row">
-        <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+        <label for="node-input-name"><i class="icon-tag"></i> Node Name</label>
         <input type="text" id="node-input-name" placeholder="Name">
     </div>
 </script>
@@ -988,6 +1059,7 @@
         inputs: 1,
         outputs: 0,
         icon: "font-awesome/fa-sliders-h",
+      paletteLabel: "Analog Output",
         label: function() {
             return this.name || "Analog Output";
         }
@@ -1008,7 +1080,7 @@
         </select>
     </div>
     <div class="form-row">
-        <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+        <label for="node-input-name"><i class="icon-tag"></i> Node Name</label>
         <input type="text" id="node-input-name" placeholder="Name">
     </div>
 </script>
@@ -1039,6 +1111,7 @@
         inputs: 1,
         outputs: 0,
         icon: "font-awesome/fa-toggle-off",
+      paletteLabel: "Digital Output",
         label: function() {
             return this.name || "Digital Output";
         }
@@ -1056,13 +1129,6 @@
             <option value="2">A2</option>
         </select>
     </div>
-    <div class="form-row" id="grovepi-mode-row">
-        <label for="node-input-mode"><i class="fa fa-plug"></i> Mode</label>
-        <select id="node-input-mode">
-            <option value="timer">Timer Mode</option>
-            <option value="event">Event Mode</option>
-        </select>
-    </div>
     <div class="form-row interval-row" id="grovepi-interval-row">
         <label for="node-input-interval"<i class="fa fa-repeat"></i> Interval</label>
         <input id="node-input-interval" min="1" class="interval-time-count"></input>
@@ -1074,8 +1140,16 @@
         </select><br/>
     </div>
     <div class="form-row">
-        <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+        <label for="node-input-name"><i class="icon-tag"></i> Node Name</label>
         <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+    <div class="form-row">
+        <label for="node-input-name"><i class="icon-tag"></i> Sensor Name</label>
+        <input type="text" id="node-input-sensorname" placeholder="Sensor Name">
+    </div>
+    <div class="form-row">
+        <label for="node-input-name"><i class="icon-tag"></i> Sensor ID</label>
+        <input type="text" id="node-input-sensorid" placeholder="Sensor ID">
     </div>
 </script>
 
@@ -1101,11 +1175,14 @@
       mode: {value: "timer", required: true},
       interval: {value: 1, required: true},
       unit: {value: "s", required: true},
-      pin: {value: "2", required: true}
+      pin: {value: "2", required: true},
+      sensorname: {value: "Analog Input"},
+      sensorid: {value: "grovepi.analog-input.1"},
     },
     inputs: 0,
     outputs: 1,
     icon: "font-awesome/fa-sliders-h",
+    paletteLabel: "Analog Input",
     label: function() {
       return this.name || "Analog Input";
     }
@@ -1125,13 +1202,6 @@
             <option value="8">D8</option>
         </select>
     </div>
-    <div class="form-row" id="grovepi-mode-row">
-        <label for="node-input-mode"><i class="fa fa-plug"></i> Mode</label>
-        <select id="node-input-mode">
-            <option value="timer">Timer Mode</option>
-            <option value="event">Event Mode</option>
-        </select>
-    </div>
     <div class="form-row interval-row" id="grovepi-interval-row">
         <label for="node-input-interval"<i class="fa fa-repeat"></i> Interval</label>
         <input id="node-input-interval" min="1" class="interval-time-count"></input>
@@ -1143,8 +1213,16 @@
         </select><br/>
     </div>
     <div class="form-row">
-        <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+        <label for="node-input-name"><i class="icon-tag"></i> Node Name</label>
         <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+    <div class="form-row">
+        <label for="node-input-name"><i class="icon-tag"></i> Sensor Name</label>
+        <input type="text" id="node-input-sensorname" placeholder="Sensor Name">
+    </div>
+    <div class="form-row">
+        <label for="node-input-name"><i class="icon-tag"></i> Sensor ID</label>
+        <input type="text" id="node-input-sensorid" placeholder="Sensor ID">
     </div>
 </script>
 
@@ -1170,11 +1248,14 @@
       mode: {value: "timer", required: true},
       interval: {value: 1, required: true},
       unit: {value: "s", required: true},
-      pin: {value: "2", required: true}
+      pin: {value: "2", required: true},
+      sensorname: {value: "Digital Input"},
+      sensorid: {value: "grovepi.digital-input.1"},
     },
     inputs: 0,
     outputs: 1,
     icon: "font-awesome/fa-toggle-on",
+    paletteLabel: "Digital Input",
     label: function() {
       return this.name || "Digital Input";
     }
@@ -1183,8 +1264,16 @@
 
 <script type="text/x-red" data-template-name="grovepi-gesture-sensor">
     <div class="form-row">
-        <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+        <label for="node-input-name"><i class="icon-tag"></i> Node Name</label>
         <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+    <div class="form-row">
+        <label for="node-input-name"><i class="icon-tag"></i> Sensor Name</label>
+        <input type="text" id="node-input-sensorname" placeholder="Sensor Name">
+    </div>
+    <div class="form-row">
+        <label for="node-input-name"><i class="icon-tag"></i> Sensor ID</label>
+        <input type="text" id="node-input-sensorid" placeholder="Sensor ID">
     </div>
 </script>
 
@@ -1216,11 +1305,14 @@
     color: '#3FADB5',
     defaults: {
       name: {value: ""},
-      pin: {value: "1", required: true}
+      pin: {value: "1", required: true},
+      sensorname: {value: "Gesture Sensor"},
+      sensorid: {value: "grovepi.gesture.1"},
     },
     inputs: 0,
     outputs: 1,
     icon: "font-awesome/fa-sign-language",
+    paletteLabel: "Gesture Sensor",
     label: function() {
       return this.name || "Gesture Sensor";
     }
@@ -1236,13 +1328,6 @@
             <option value="2">A2</option>
         </select>
     </div>
-    <div class="form-row" id="grovepi-mode-row">
-        <label for="node-input-mode"><i class="fa fa-plug"></i> Mode</label>
-        <select id="node-input-mode">
-            <option value="timer">Timer Mode</option>
-            <option value="event">Event Mode</option>
-        </select>
-    </div>
     <div class="form-row interval-row" id="grovepi-interval-row">
         <label for="node-input-interval"<i class="fa fa-repeat"></i> Interval</label>
         <input id="node-input-interval" min="1" class="interval-time-count"></input>
@@ -1254,8 +1339,16 @@
         </select><br/>
     </div>
     <div class="form-row">
-        <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+        <label for="node-input-name"><i class="icon-tag"></i> Node Name</label>
         <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+    <div class="form-row">
+        <label for="node-input-name"><i class="icon-tag"></i> Sensor Name</label>
+        <input type="text" id="node-input-sensorname" placeholder="Sensor Name">
+    </div>
+    <div class="form-row">
+        <label for="node-input-name"><i class="icon-tag"></i> Sensor ID</label>
+        <input type="text" id="node-input-sensorid" placeholder="Sensor ID">
     </div>
 </script>
 
@@ -1281,11 +1374,14 @@
       mode: {value: "timer", required: true},
       interval: {value: 1, required: true},
       unit: {value: "s", required: true},
-      pin: {value: "2", required: true}
+      pin: {value: "2", required: true},
+      sensorname: {value: "Light Sensor"},
+      sensorid: {value: "grovepi.light.1"},
     },
     inputs: 0,
     outputs: 1,
     icon: "font-awesome/fa-adjust",
+    paletteLabel: "Light Sensor",
     label: function() {
       return this.name || "Light Sensor";
     }
@@ -1301,13 +1397,6 @@
             <option value="2">A2</option>
         </select>
     </div>
-    <div class="form-row" id="grovepi-mode-row">
-        <label for="node-input-mode"><i class="fa fa-plug"></i> Mode</label>
-        <select id="node-input-mode">
-            <option value="timer">Timer Mode</option>
-            <option value="event">Event Mode</option>
-        </select>
-    </div>
     <div class="form-row interval-row" id="grovepi-interval-row">
         <label for="node-input-interval"<i class="fa fa-repeat"></i> Interval</label>
         <input id="node-input-interval" min="1" class="interval-time-count"></input>
@@ -1319,8 +1408,16 @@
         </select><br/>
     </div>
     <div class="form-row">
-        <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+        <label for="node-input-name"><i class="icon-tag"></i> Node Name</label>
         <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+    <div class="form-row">
+        <label for="node-input-name"><i class="icon-tag"></i> Sensor Name</label>
+        <input type="text" id="node-input-sensorname" placeholder="Sensor Name">
+    </div>
+    <div class="form-row">
+        <label for="node-input-name"><i class="icon-tag"></i> Sensor ID</label>
+        <input type="text" id="node-input-sensorid" placeholder="Sensor ID">
     </div>
 </script>
 
@@ -1351,11 +1448,14 @@
       mode: {value: "timer", required: true},
       interval: {value: 1, required: true},
       unit: {value: "s", required: true},
-      pin: {value: "2", required: true}
+      pin: {value: "2", required: true},
+      sensorname: {value: "Loudness Sensor"},
+      sensorid: {value: "grovepi.loudness.1"},
     },
     inputs: 0,
     outputs: 1,
     icon: "font-awesome/fa-microphone",
+    paletteLabel: "Loudness Sensor",
     label: function() {
       return this.name || "Loudness Sensor";
     }

@@ -41,22 +41,22 @@ specifications `{unit: ..., name: ..., type: ...}`.
 This additional information is used for displaying sensor values on the LCD
 and when sending datapoints to the OpenDash platform.
 
-## Sensor Modes
+The `name` and `id` values used in the open.DASH JSON object are
+stored in `msg.sensorname` and `msg.sensorid`.
 
-Sensors can be used in two different configurations, in _live_ or in
-_interval_ mode.
+`user` is set by the "RMQ Output" node and uses the "Username" value
+entered in the node configuration.
 
-In _live_ mode, the sensors are polled as often as possible but only
-send events when the new value is different.  It's well suited for
-building applications with alarms or actions triggered by the sensors
-values.
+## “Event Mode”
 
-In _interval_ mode, sensors send an event every n seconds
-(configurable).  It's intended to be used to provide a consistent data
-stream for logging applications.
+For some sensors, like the button, it might be useful to send an event
+only when the sensor value changes.
 
-To prevent wrongly configured sensors from hanging up the system,
-the fastest sampling rate allowed is once every 50ms.
+To do so, set the reading interval to a low value (e.g. 200ms),
+then connect the sensor to a "rbe" node.
+
+This node only lets messages through if their payload has changed.
+It can be found at the bottom of the "Functions" section.
 
 ## Inputs / Sensors
 
@@ -98,6 +98,14 @@ When connecting a I2C sensor, it doesn't matter which pin is used.
 
 Records 5 samples per second, then sends out the average and the
 maximum value.
+
+## Troubleshooting
+
+If a sensor returns `false` instead of a numeric value,
+check if the red LED on the GrovePI board is on.
+
+In that case, disconnect all sensors from the board,
+detach the GrovePI board and put it back on.
 
 ## Credits
 

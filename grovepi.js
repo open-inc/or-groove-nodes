@@ -470,7 +470,6 @@ module.exports = function(RED) {
 
     node.interval = setInterval(function() {
       var reading = node.sensor.read();
-      console.log("Reading", reading);
 
       var now = Date.now();
       node.lastValue = node.value;
